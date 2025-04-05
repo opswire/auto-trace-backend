@@ -1,0 +1,138 @@
+package v1
+
+import (
+	httpdto "car-sell-buy-system/internal/sso-service/controller/http"
+	"car-sell-buy-system/internal/sso-service/entity"
+	"car-sell-buy-system/internal/sso-service/middleware"
+	"car-sell-buy-system/internal/sso-service/usecase"
+	"car-sell-buy-system/pkg/auth"
+	"car-sell-buy-system/pkg/logger"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+)
+
+type userRoutes struct {
+	uc usecase.User
+	l  logger.Interface
+}
+
+func newAdRoutes(handler *gin.RouterGroup, l logger.Interface, uc usecase.User) {
+	r := &userRoutes{uc, l}
+
+	h := handler.Group("/users")
+	{
+		h.POST("/register", r.register)
+		h.POST("/login", r.login)
+
+		// protected
+		h.Use(middleware.RequiredAuthMiddleware())
+		h.GET("/profile", r.getProfile)
+	}
+
+	// protected
+}
+
+type registerRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (a *userRoutes) register(c *gin.Context) {
+	var request registerRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	ad, err := a.uc.Register(
+		c.Request.Context(),
+		entity.User{
+			Email:    request.Email,
+			Password: request.Password,
+		},
+	)
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+
+		return
+	}
+
+	a.l.Info("User with ID %d created successfully!", ad.Id)
+
+	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
+		Status: http.StatusOK,
+		Data:   ad,
+	})
+}
+
+type loginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (a *userRoutes) login(c *gin.Context) {
+	var login loginRequest
+	if err := c.ShouldBindJSON(&login); err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	user, err := a.uc.GetByEmail(c.Request.Context(), login.Email)
+	if err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	if user == nil {
+		c.JSON(http.StatusNotFound, httpdto.BasicResponseDTO{
+			Status: http.StatusNotFound,
+			Data:   "пользователь с таким email не найден",
+		})
+		return
+	}
+
+	if err = user.ComparePasswords(login.Password); err != nil {
+		c.JSON(http.StatusBadRequest, httpdto.BasicResponseDTO{
+			Status: http.StatusBadRequest,
+			Data:   "Пароль не совпадает",
+		})
+		return
+	}
+
+	token, err := auth.GenerateJWT(strconv.Itoa(user.Id), user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
+		Status: http.StatusOK,
+		Data: gin.H{
+			"access_token": "Bearer " + token,
+		},
+	})
+}
+
+func (a *userRoutes) getProfile(c *gin.Context) {
+	email, exists := c.Get("email")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Email not found"})
+		return
+	}
+
+	user, err := a.uc.GetByEmail(c.Request.Context(), email.(string))
+	if err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
+		Status: http.StatusOK,
+		Data:   user,
+	})
+}

@@ -1,0 +1,1 @@
+INSERT INTO ads VALUES ();

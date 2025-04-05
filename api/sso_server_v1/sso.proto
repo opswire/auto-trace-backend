@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package sso_server_v1;
+
+option go_package = "github.com/opswire/go-car-sell-system/sso-service/pkg/grpc/sso_server_v1;sso_server_v1";
+
+service SsoV1 {
+  rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
+}
+
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+message VerifyTokenResponse {
+  int64 user_id = 1;
+  bool valid = 2;
+}
