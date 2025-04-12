@@ -3,8 +3,8 @@ package app
 import (
 	"car-sell-buy-system/config"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1"
+	"car-sell-buy-system/internal/ads-service/repository/persistent"
 	"car-sell-buy-system/internal/ads-service/usecase"
-	"car-sell-buy-system/internal/ads-service/usecase/repo"
 	"car-sell-buy-system/pkg/httpserver"
 	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
@@ -18,7 +18,7 @@ import (
 
 func Run(cfg *config.Config) {
 	// Logger
-	l := logger.New("info")
+	l := logger.New("debug")
 
 	// Postgres
 	pg, err := postgres.New(cfg.Pg.URL)
@@ -28,7 +28,7 @@ func Run(cfg *config.Config) {
 	defer pg.Pool.Close()
 
 	// Use cases
-	adUseCase := usecase.NewAdUseCase(repo.NewAdRepo(pg), repo.NewCarRepo(pg))
+	adUseCase := usecase.NewAdUseCase(persistent.NewAdRepository(pg))
 
 	handler := gin.New()
 	v1.NewRouter(handler, l, adUseCase)

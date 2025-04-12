@@ -1,0 +1,291 @@
+definitions:
+  ad.HandleFavoriteRequest:
+    properties:
+      ad_id:
+        type: integer
+    type: object
+  ad.ListResponse:
+    properties:
+      ads:
+        items:
+          $ref: '#/definitions/ad.Response'
+        type: array
+      range:
+        $ref: '#/definitions/pagination.ListRange'
+    type: object
+  ad.Response:
+    properties:
+      brand:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_favorite:
+        type: boolean
+      is_token_minted:
+        type: boolean
+      model:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      vin:
+        type: string
+      year_of_release:
+        type: integer
+    type: object
+  ad.StoreRequest:
+    properties:
+      brand:
+        type: string
+      description:
+        type: string
+      model:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      vin:
+        type: string
+      year_of_release:
+        type: integer
+    type: object
+  handler.BasicResponseDTO:
+    properties:
+      data: {}
+      status:
+        type: integer
+    type: object
+  handler.ErrorResponse:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
+  pagination.ListRange:
+    properties:
+      count:
+        type: integer
+      page:
+        type: integer
+      per_page:
+        type: integer
+    type: object
+  webapi.NftInfo:
+    properties:
+      chain_id:
+        type: integer
+      chain_name:
+        type: string
+      contract_addr:
+        type: string
+      token_id:
+        type: integer
+      token_metadata:
+        $ref: '#/definitions/webapi.TokenMetadata'
+      token_url:
+        type: string
+    type: object
+  webapi.TokenMetadata:
+    properties:
+      attributes:
+        items:
+          properties:
+            trait_type:
+              type: string
+            value:
+              type: string
+          type: object
+        type: array
+      description:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /ads:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated and filtered list of ads
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Filter criteria (key=value)
+        in: query
+        name: filter
+        type: string
+      - description: Sort field and direction (field=asc|desc)
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/ad.ListResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get ads list
+      tags:
+      - Ads
+    post:
+      consumes:
+      - application/json
+      description: Create new car advertisement
+      parameters:
+      - description: Ad data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ad.StoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/ad.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new advertisement
+      tags:
+      - Ads
+  /ads/{adId}/nft:
+    get:
+      consumes:
+      - application/json
+      description: Get NFT information for ad
+      parameters:
+      - description: Ad ID
+        in: path
+        name: adId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/webapi.NftInfo'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get NFT metadata
+      tags:
+      - NFT
+  /ads/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get car advertisement details
+      parameters:
+      - description: Ad ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.BasicResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get advertisement by ID
+      tags:
+      - Ads
+  /ads/favorites:
+    post:
+      consumes:
+      - application/json
+      description: Toggle ad in user's favorites
+      parameters:
+      - description: Ad ID
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ad.HandleFavoriteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.BasicResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add/remove ad to favorites
+      tags:
+      - Favorites
+swagger: "2.0"

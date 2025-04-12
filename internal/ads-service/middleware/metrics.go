@@ -8,5 +8,6 @@ import (
 func IncreaseTotalRequestsMetric(metric *prometheus.CounterVec) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		metric.WithLabelValues("total_requests").Inc()
+		c.Next()
 	}
 }

@@ -3,14 +3,24 @@ export
 
 .PHONY: migrate-create migrate-up migrate-down
 
+swag-init:
+	# ./bin/swag init -g ./internal/ads-service/controller/http/v1/router.go
+	 ./bin/swag init -g ./cmd/ads/main.go
+
+swag-fmt:
+	 ./bin/swag fmt -g ./cmd/ads/main.go
+
 migrate-create:
-	migrate create -ext sql -dir migrations -seq $(name)
+	./bin/migrate create -ext sql -dir migrations -seq $(name)
 
 migrate-up:
-	migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' up
+	./bin/migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' up
 
 migrate-down:
-	migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' down
+	./bin/migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' down
+
+seed:
+	go run ./cmd/ads/seed/seeder.go
 
 # GRPC
 

@@ -6,6 +6,7 @@ type User struct {
 	Id       int    `json:"id"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     string
 }
 
 func (u *User) ComparePasswords(password string) error {
