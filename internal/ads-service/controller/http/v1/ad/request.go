@@ -1,6 +1,8 @@
 package ad
 
-import "car-sell-buy-system/internal/ads-service/entity"
+import (
+	"car-sell-buy-system/internal/ads-service/domain/ad"
+)
 
 type StoreRequest struct {
 	Title         string  `json:"title"`
@@ -12,8 +14,8 @@ type StoreRequest struct {
 	YearOfRelease int64   `json:"year_of_release"`
 }
 
-func (r StoreRequest) ToDTO() entity.AdStoreDTO {
-	return entity.AdStoreDTO{
+func (r StoreRequest) ToDTO() ad.StoreDTO {
+	return ad.StoreDTO{
 		Title:         r.Title,
 		Description:   r.Description,
 		Price:         r.Price,
@@ -28,8 +30,8 @@ type HandleFavoriteRequest struct {
 	AdId int64 `json:"ad_id"`
 }
 
-func (r HandleFavoriteRequest) ToDTO() entity.AdHandleFavoriteDTO {
-	return entity.AdHandleFavoriteDTO{
+func (r HandleFavoriteRequest) ToDTO() ad.HandleFavoriteDTO {
+	return ad.HandleFavoriteDTO{
 		AdId: r.AdId,
 	}
 }

@@ -1,6 +1,7 @@
 package webapi
 
 import (
+	"car-sell-buy-system/internal/ads-service/domain/nft"
 	"car-sell-buy-system/pkg/blockchain/conctracts/carhistory"
 	"context"
 	"encoding/json"
@@ -24,62 +25,43 @@ const (
 type NftEthereumWebAPI struct {
 }
 
-type TokenMetadata struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Image       string `json:"image"`
-	Attributes  []struct {
-		TraitType string `json:"trait_type"`
-		Value     string `json:"value"`
-	} `json:"attributes"`
-}
-
-type NftInfo struct {
-	ContractAddr  string        `json:"contract_addr"`
-	ChainId       int           `json:"chain_id"`
-	ChainName     string        `json:"chain_name"`
-	TokenMetadata TokenMetadata `json:"token_metadata"`
-	TokenId       int           `json:"token_id"`
-	TokenUrl      string        `json:"token_url"`
-}
-
 func NewNftEthereumWebAPI() *NftEthereumWebAPI {
 	return &NftEthereumWebAPI{}
 }
 
-func (*NftEthereumWebAPI) GetNftInfo(ctx context.Context, tokenId *big.Int) (NftInfo, error) {
+func (*NftEthereumWebAPI) GetNftInfo(ctx context.Context, tokenId *big.Int) (nft.NFT, error) {
 	client, err := ethclient.Dial(rpcURL)
 	if err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка подключения к Ethereum: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка подключения к Ethereum: %v", err)
 	}
 
 	contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
 	if err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка создания экземпляра контракта: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка создания экземпляра контракта: %v", err)
 	}
 
 	uri, err := contract.TokenURI(nil, tokenId)
 	if err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка получения URI токена: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка получения URI токена: %v", err)
 	}
 
 	resp, err := http.Get(uri)
 	if err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка загрузки метаданных: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка загрузки метаданных: %v", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка чтения метаданных: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка чтения метаданных: %v", err)
 	}
 
-	var metadata TokenMetadata
+	var metadata nft.TokenMetadata
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return NftInfo{}, fmt.Errorf("ошибка разбора метаданных: %v", err)
+		return nft.NFT{}, fmt.Errorf("ошибка разбора метаданных: %v", err)
 	}
 
-	return NftInfo{
+	return nft.NFT{
 		ContractAddr:  contractAddr,
 		ChainId:       chainId,
 		ChainName:     chainName,

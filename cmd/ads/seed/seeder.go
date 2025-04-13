@@ -37,7 +37,7 @@ func main() {
 		//}
 	}
 
-	if err = SeedUsers(ctx, pg); err != nil {
+	if err = seedUsers(ctx, pg); err != nil {
 		fmt.Printf("Error seeding users: %v\n", err)
 		//if err = tx.Rollback(ctx); err != nil {
 		//	log.Fatal("Failed to rollback transaction.", err)

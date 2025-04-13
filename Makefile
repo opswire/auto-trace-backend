@@ -4,23 +4,31 @@ export
 .PHONY: migrate-create migrate-up migrate-down
 
 swag-init:
-	# ./bin/swag init -g ./internal/ads-service/controller/http/v1/router.go
-	 ./bin/swag init -g ./cmd/ads/main.go
+	 swag init -g ./internal/ads-service/controller/http/router.go
 
 swag-fmt:
-	 ./bin/swag fmt -g ./cmd/ads/main.go
+	 swag fmt -g ./cmd/ads/main.go
 
 migrate-create:
 	./bin/migrate create -ext sql -dir migrations -seq $(name)
 
 migrate-up:
-	./bin/migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' up
+	go run ./cmd/command/root.go migrate-up
 
 migrate-down:
-	./bin/migrate -path migrations -database '$(PG_EXPOSE_URL)?sslmode=disable' down
+	go run ./cmd/command/root.go migrate-down
 
 seed:
 	go run ./cmd/ads/seed/seeder.go
+
+.PHONY: test
+test: ### run test
+	go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/ads-service...
+
+.PHONY: mock
+mock: ### run mockgen
+	mockgen -source ./internal/ads-service/domain/ad/service.go -package ad_test > ./internal/ads-service/domain/ad/mock_service_test.go
+	#mockgen -source ./internal/ads-service/usecase/contracts.go -package usecase_test > ./internal/ads-service/usecase/mocks_usecase_test.go
 
 # GRPC
 
@@ -40,6 +48,9 @@ PKG_PROTO_PATH := $(CURDIR)/pkg/grpc
 .bin-deps: export GOBIN := $(LOCAL_BIN)
 .bin-deps:
 	$(info Installing binary dependencies...)
+
+	go install github.com/golang/mock/mockgen@v1.6.0
+	go install github.com/swaggo/swag/cmd/swag@latest
 
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest

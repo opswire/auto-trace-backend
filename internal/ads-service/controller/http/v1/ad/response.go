@@ -1,7 +1,7 @@
 package ad
 
 import (
-	"car-sell-buy-system/internal/ads-service/entity"
+	"car-sell-buy-system/internal/ads-service/domain/ad"
 	"car-sell-buy-system/pkg/pagination"
 )
 
@@ -18,7 +18,7 @@ type Response struct {
 	IsTokenMinted bool    `json:"is_token_minted"`
 }
 
-func newResponse(ad entity.Ad) Response {
+func newResponse(ad ad.Ad) Response {
 	return Response{
 		Id:            ad.Id,
 		Title:         ad.Title,
@@ -38,11 +38,11 @@ type ListResponse struct {
 	Range pagination.ListRange `json:"range"`
 }
 
-func newListResponse(ads []entity.Ad, params pagination.Params, count uint64) ListResponse {
+func newListResponse(ads []ad.Ad, params pagination.Params, count uint64) ListResponse {
 	responses := make([]Response, 0, len(ads))
 
-	for _, ad := range ads {
-		responses = append(responses, newResponse(ad))
+	for _, adv := range ads {
+		responses = append(responses, newResponse(adv))
 	}
 
 	return ListResponse{

@@ -1,10 +1,18 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "title": "Ads Service API",
+        "contact": {},
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
     },
+    "host": "http://localhost:8989",
+    "basePath": "/api/v1",
     "paths": {
-        "/ads": {
+        "/api/v1/ads": {
             "get": {
                 "description": "Get paginated and filtered list of ads",
                 "consumes": [
@@ -140,58 +148,7 @@
                 }
             }
         },
-        "/ads/favorites": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Toggle ad in user's favorites",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Favorites"
-                ],
-                "summary": "Add/remove ad to favorites",
-                "parameters": [
-                    {
-                        "description": "Ad ID",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ad.HandleFavoriteRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.BasicResponseDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/ads/{adId}/nft": {
+        "/api/v1/ads/{adId}/nft": {
             "get": {
                 "description": "Get NFT information for ad",
                 "consumes": [
@@ -225,7 +182,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/webapi.NftInfo"
+                                            "$ref": "#/definitions/nft.NFT"
                                         }
                                     }
                                 }
@@ -247,7 +204,7 @@
                 }
             }
         },
-        "/ads/{id}": {
+        "/api/v1/ads/{id}": {
             "get": {
                 "description": "Get car advertisement details",
                 "consumes": [
@@ -267,6 +224,57 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.BasicResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/favorites": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Toggle ad in user's favorites",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Add/remove ad to favorites",
+                "parameters": [
+                    {
+                        "description": "Ad ID",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ad.HandleFavoriteRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -394,21 +402,7 @@
                 }
             }
         },
-        "pagination.ListRange": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "per_page": {
-                    "type": "integer"
-                }
-            }
-        },
-        "webapi.NftInfo": {
+        "nft.NFT": {
             "type": "object",
             "properties": {
                 "chain_id": {
@@ -424,14 +418,14 @@
                     "type": "integer"
                 },
                 "token_metadata": {
-                    "$ref": "#/definitions/webapi.TokenMetadata"
+                    "$ref": "#/definitions/nft.TokenMetadata"
                 },
                 "token_url": {
                     "type": "string"
                 }
             }
         },
-        "webapi.TokenMetadata": {
+        "nft.TokenMetadata": {
             "type": "object",
             "properties": {
                 "attributes": {
@@ -458,6 +452,24 @@
                     "type": "string"
                 }
             }
+        },
+        "pagination.ListRange": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "per_page": {
+                    "type": "integer"
+                }
+            }
         }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
     }
 }

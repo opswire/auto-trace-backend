@@ -1,9 +1,9 @@
 package ad
 
 import (
-	"car-sell-buy-system/internal/ads-service/entity"
+	"car-sell-buy-system/internal/ads-service/domain/ad"
+	"car-sell-buy-system/internal/ads-service/domain/nft"
 	"car-sell-buy-system/internal/ads-service/middleware"
-	"car-sell-buy-system/internal/ads-service/usecase"
 	"car-sell-buy-system/pkg/handler"
 	"car-sell-buy-system/pkg/logger"
 	"context"
@@ -11,25 +11,38 @@ import (
 	"net/http"
 )
 
-type Controller struct {
-	handler *handler.BaseHandler
-	uc      usecase.Ad
+type Service interface {
+	List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint64, error)
+	GetById(ctx context.Context, id int64) (ad.Ad, error)
+	Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error)
+	HandleFavorite(ctx context.Context, adId, userId int64) error
+	GetTokenInfo(ctx context.Context, tokenId int64) (nft.NFT, error)
 }
 
-func InitAdRoutes(ginHandler *gin.RouterGroup, l logger.Interface, uc usecase.Ad) {
-	r := &Controller{handler.NewBaseHandler(l), uc}
+type Controller struct {
+	handler *handler.BaseHandler
+	service Service
+}
 
-	h := ginHandler.Group("/ads")
+func NewController(l logger.Interface, service Service) *Controller {
+	return &Controller{
+		handler.NewBaseHandler(l),
+		service,
+	}
+}
+
+func (ctrl *Controller) InitAPI(router *gin.RouterGroup) {
+	h := router.Group("/ads")
 	{
-		h.Use(middleware.OptionalAuthMiddleware(l))
-		h.GET("", r.list)
-		h.GET("/:adId", r.getById)
-		h.POST("", r.store)
-		h.GET("/:adId/nftInfo", r.getNftInfo)
+		h.Use(middleware.OptionalAuthMiddleware(ctrl.handler.Logger))
+		h.GET("", ctrl.list)
+		h.GET("/:adId", ctrl.getById)
+		h.POST("", ctrl.store)
+		h.GET("/:adId/nftInfo", ctrl.getNftInfo)
 
 		// Protected
-		h.Use(middleware.RequiredAuthMiddleware(l))
-		h.POST("/favorite", r.handleFavorite)
+		h.Use(middleware.RequiredAuthMiddleware(ctrl.handler.Logger))
+		h.POST("/favorite", ctrl.handleFavorite)
 	}
 }
 
@@ -44,7 +57,7 @@ func InitAdRoutes(ginHandler *gin.RouterGroup, l logger.Interface, uc usecase.Ad
 //	@Success		200	{object}	handler.BasicResponseDTO
 //	@Failure		400	{object}	handler.ErrorResponse
 //	@Failure		500	{object}	handler.ErrorResponse
-//	@Router			/ads/{id} [get]
+//	@Router			/api/v1/ads/{id} [get]
 func (ctrl *Controller) getById(c *gin.Context) {
 	adId, err := ctrl.handler.ParseIDFromPath(c, "adId")
 	if err != nil {
@@ -53,7 +66,7 @@ func (ctrl *Controller) getById(c *gin.Context) {
 		return
 	}
 
-	ad, err := ctrl.uc.GetById(c.Request.Context(), adId)
+	adv, err := ctrl.service.GetById(c.Request.Context(), adId)
 	if err != nil {
 		ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad not found. Internal error.")
 
@@ -62,22 +75,23 @@ func (ctrl *Controller) getById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, handler.BasicResponseDTO{
 		Status: http.StatusOK,
-		Data:   newResponse(ad),
+		Data:   newResponse(adv),
 	})
 }
 
 // Store Ad
-// @Summary Create new advertisement
-// @Description Create new car advertisement
-// @Tags Ads
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param input body StoreRequest true "Ad data"
-// @Success 201 {object} handler.BasicResponseDTO{data=ad.Response}
-// @Failure 400 {object} handler.ErrorResponse
-// @Failure 500 {object} handler.ErrorResponse
-// @Router /ads [post]
+//
+//	@Summary		Create new advertisement
+//	@Description	Create new car advertisement
+//	@Tags			Ads
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			input	body		StoreRequest	true	"Ad data"
+//	@Success		201		{object}	handler.BasicResponseDTO{data=ad.Response}
+//	@Failure		400		{object}	handler.ErrorResponse
+//	@Failure		500		{object}	handler.ErrorResponse
+//	@Router			/api/v1/ads [post]
 func (ctrl *Controller) store(c *gin.Context) {
 	var request StoreRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -85,7 +99,7 @@ func (ctrl *Controller) store(c *gin.Context) {
 		return
 	}
 
-	ad, err := ctrl.uc.Store(
+	adv, err := ctrl.service.Store(
 		c.Request.Context(),
 		request.ToDTO(),
 	)
@@ -94,35 +108,36 @@ func (ctrl *Controller) store(c *gin.Context) {
 		return
 	}
 
-	ctrl.handler.Logger.Info("Ad with ID %d created successfully!", ad.Id)
+	ctrl.handler.Logger.Info("Ad with ID %d created successfully!", adv.Id)
 
 	c.JSON(http.StatusOK, handler.BasicResponseDTO{
 		Status: http.StatusOK,
-		Data:   newResponse(ad),
+		Data:   newResponse(adv),
 	})
 }
 
 // List Ads
-// @Summary Get ads list
-// @Description Get paginated and filtered list of ads
-// @Tags Ads
-// @Accept json
-// @Produce json
-// @Param page query int false "Page number" default(1)
-// @Param limit query int false "Items per page" default(10)
-// @Param filter query string false "Filter criteria (key=value)"
-// @Param sort query string false "Sort field and direction (field=asc|desc)"
-// @Success 200 {object} handler.BasicResponseDTO{data=ad.ListResponse}
-// @Failure 400 {object} handler.ErrorResponse
-// @Failure 404 {object} handler.ErrorResponse
-// @Router /ads [get]
+//
+//	@Summary		Get ads list
+//	@Description	Get paginated and filtered list of ads
+//	@Tags			Ads
+//	@Accept			json
+//	@Produce		json
+//	@Param			page	query		int		false	"Page number"		default(1)
+//	@Param			limit	query		int		false	"Items per page"	default(10)
+//	@Param			filter	query		string	false	"Filter criteria (key=value)"
+//	@Param			sort	query		string	false	"Sort field and direction (field=asc|desc)"
+//	@Success		200		{object}	handler.BasicResponseDTO{data=ad.ListResponse}
+//	@Failure		400		{object}	handler.ErrorResponse
+//	@Failure		404		{object}	handler.ErrorResponse
+//	@Router			/api/v1/ads [get]
 func (ctrl *Controller) list(c *gin.Context) {
 	paginationParams, err := ctrl.handler.ParsePaginationParams(c)
 	if err != nil {
 		ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Pagination params is not valid.")
 	}
 
-	dto := entity.AdListDTO{
+	dto := ad.ListDTO{
 		Filter:     c.QueryMap("filter"),
 		Sort:       c.QueryMap("sort"),
 		Pagination: paginationParams,
@@ -131,7 +146,7 @@ func (ctrl *Controller) list(c *gin.Context) {
 	userId, _ := c.Get("userId")
 	ctx := context.WithValue(c.Request.Context(), "userId", userId)
 
-	ads, count, err := ctrl.uc.List(ctx, dto)
+	ads, count, err := ctrl.service.List(ctx, dto)
 	if err != nil {
 		ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ads not found.")
 
@@ -145,17 +160,18 @@ func (ctrl *Controller) list(c *gin.Context) {
 }
 
 // Handle Favorite
-// @Summary Add/remove ad to favorites
-// @Description Toggle ad in user's favorites
-// @Tags Favorites
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param input body HandleFavoriteRequest true "Ad ID"
-// @Success 200 {object} handler.BasicResponseDTO
-// @Failure 400 {object} handler.ErrorResponse
-// @Failure 500 {object} handler.ErrorResponse
-// @Router /ads/favorites [post]
+//
+//	@Summary		Add/remove ad to favorites
+//	@Description	Toggle ad in user's favorites
+//	@Tags			Ads
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			input	body		HandleFavoriteRequest	true	"Ad ID"
+//	@Success		200		{object}	handler.BasicResponseDTO
+//	@Failure		400		{object}	handler.ErrorResponse
+//	@Failure		500		{object}	handler.ErrorResponse
+//	@Router			/api/v1/favorites [post]
 func (ctrl *Controller) handleFavorite(c *gin.Context) {
 	var request HandleFavoriteRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -166,7 +182,7 @@ func (ctrl *Controller) handleFavorite(c *gin.Context) {
 
 	userId, _ := c.Get("userId")
 
-	err := ctrl.uc.HandleFavorite(
+	err := ctrl.service.HandleFavorite(
 		c.Request.Context(),
 		request.AdId,
 		userId.(int64),
@@ -184,16 +200,17 @@ func (ctrl *Controller) handleFavorite(c *gin.Context) {
 }
 
 // Get NFT Info
-// @Summary Get NFT metadata
-// @Description Get NFT information for ad
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param adId path int true "Ad ID"
-// @Success 200 {object} handler.BasicResponseDTO{data=webapi.NftInfo}
-// @Failure 400 {object} handler.ErrorResponse
-// @Failure 404 {object} handler.ErrorResponse
-// @Router /ads/{adId}/nft [get]
+//
+//	@Summary		Get NFT metadata
+//	@Description	Get NFT information for ad
+//	@Tags			NFT
+//	@Accept			json
+//	@Produce		json
+//	@Param			adId	path		int	true	"Ad ID"
+//	@Success		200		{object}	handler.BasicResponseDTO{data=nft.NFT}
+//	@Failure		400		{object}	handler.ErrorResponse
+//	@Failure		404		{object}	handler.ErrorResponse
+//	@Router			/api/v1/ads/{adId}/nft [get]
 func (ctrl *Controller) getNftInfo(c *gin.Context) {
 	_, err := ctrl.handler.ParseIDFromPath(c, "adId")
 	if err != nil {
@@ -202,7 +219,7 @@ func (ctrl *Controller) getNftInfo(c *gin.Context) {
 		return
 	}
 
-	ad, err := ctrl.uc.GetTokenInfo(c.Request.Context(), 5552)
+	adv, err := ctrl.service.GetTokenInfo(c.Request.Context(), 5552)
 	if err != nil {
 		ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad getNftInfo error. Internal error.")
 
@@ -211,6 +228,6 @@ func (ctrl *Controller) getNftInfo(c *gin.Context) {
 
 	c.JSON(http.StatusOK, handler.BasicResponseDTO{
 		Status: http.StatusOK,
-		Data:   ad,
+		Data:   adv,
 	})
 }

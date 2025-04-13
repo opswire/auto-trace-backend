@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   ad.HandleFavoriteRequest:
     properties:
@@ -65,16 +66,7 @@ definitions:
         example: message
         type: string
     type: object
-  pagination.ListRange:
-    properties:
-      count:
-        type: integer
-      page:
-        type: integer
-      per_page:
-        type: integer
-    type: object
-  webapi.NftInfo:
+  nft.NFT:
     properties:
       chain_id:
         type: integer
@@ -85,11 +77,11 @@ definitions:
       token_id:
         type: integer
       token_metadata:
-        $ref: '#/definitions/webapi.TokenMetadata'
+        $ref: '#/definitions/nft.TokenMetadata'
       token_url:
         type: string
     type: object
-  webapi.TokenMetadata:
+  nft.TokenMetadata:
     properties:
       attributes:
         items:
@@ -107,10 +99,28 @@ definitions:
       name:
         type: string
     type: object
+  pagination.ListRange:
+    properties:
+      count:
+        type: integer
+      page:
+        type: integer
+      per_page:
+        type: integer
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: http://localhost:8989
 info:
   contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Ads Service API
+  version: "1.0"
 paths:
-  /ads:
+  /api/v1/ads:
     get:
       consumes:
       - application/json
@@ -193,7 +203,7 @@ paths:
       summary: Create new advertisement
       tags:
       - Ads
-  /ads/{adId}/nft:
+  /api/v1/ads/{adId}/nft:
     get:
       consumes:
       - application/json
@@ -214,7 +224,7 @@ paths:
             - $ref: '#/definitions/handler.BasicResponseDTO'
             - properties:
                 data:
-                  $ref: '#/definitions/webapi.NftInfo'
+                  $ref: '#/definitions/nft.NFT'
               type: object
         "400":
           description: Bad Request
@@ -227,7 +237,7 @@ paths:
       summary: Get NFT metadata
       tags:
       - NFT
-  /ads/{id}:
+  /api/v1/ads/{id}:
     get:
       consumes:
       - application/json
@@ -256,7 +266,7 @@ paths:
       summary: Get advertisement by ID
       tags:
       - Ads
-  /ads/favorites:
+  /api/v1/favorites:
     post:
       consumes:
       - application/json
@@ -287,5 +297,5 @@ paths:
       - BearerAuth: []
       summary: Add/remove ad to favorites
       tags:
-      - Favorites
+      - Ads
 swagger: "2.0"

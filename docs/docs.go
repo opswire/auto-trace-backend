@@ -10,12 +10,16 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {},
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/ads": {
+        "/api/v1/ads": {
             "get": {
                 "description": "Get paginated and filtered list of ads",
                 "consumes": [
@@ -151,58 +155,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ads/favorites": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Toggle ad in user's favorites",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Favorites"
-                ],
-                "summary": "Add/remove ad to favorites",
-                "parameters": [
-                    {
-                        "description": "Ad ID",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ad.HandleFavoriteRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.BasicResponseDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/ads/{adId}/nft": {
+        "/api/v1/ads/{adId}/nft": {
             "get": {
                 "description": "Get NFT information for ad",
                 "consumes": [
@@ -236,7 +189,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/webapi.NftInfo"
+                                            "$ref": "#/definitions/nft.NFT"
                                         }
                                     }
                                 }
@@ -258,7 +211,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ads/{id}": {
+        "/api/v1/ads/{id}": {
             "get": {
                 "description": "Get car advertisement details",
                 "consumes": [
@@ -278,6 +231,57 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.BasicResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/favorites": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Toggle ad in user's favorites",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ads"
+                ],
+                "summary": "Add/remove ad to favorites",
+                "parameters": [
+                    {
+                        "description": "Ad ID",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ad.HandleFavoriteRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -405,21 +409,7 @@ const docTemplate = `{
                 }
             }
         },
-        "pagination.ListRange": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "per_page": {
-                    "type": "integer"
-                }
-            }
-        },
-        "webapi.NftInfo": {
+        "nft.NFT": {
             "type": "object",
             "properties": {
                 "chain_id": {
@@ -435,14 +425,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "token_metadata": {
-                    "$ref": "#/definitions/webapi.TokenMetadata"
+                    "$ref": "#/definitions/nft.TokenMetadata"
                 },
                 "token_url": {
                     "type": "string"
                 }
             }
         },
-        "webapi.TokenMetadata": {
+        "nft.TokenMetadata": {
             "type": "object",
             "properties": {
                 "attributes": {
@@ -469,17 +459,35 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "pagination.ListRange": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "per_page": {
+                    "type": "integer"
+                }
+            }
         }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "http://localhost:8989",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "",
+	Title:            "Ads Service API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
