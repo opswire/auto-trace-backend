@@ -10,7 +10,7 @@ swag-fmt:
 	 swag fmt -g ./cmd/ads/main.go
 
 migrate-create:
-	./bin/migrate create -ext sql -dir migrations -seq $(name)
+	migrate create -ext sql -dir migrations -seq $(name)
 
 migrate-up:
 	go run ./cmd/command/root.go migrate-up

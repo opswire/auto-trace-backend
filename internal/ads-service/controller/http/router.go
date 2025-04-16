@@ -4,6 +4,7 @@ import (
 	_ "car-sell-buy-system/docs" // Swagger docs.
 	v1 "car-sell-buy-system/internal/ads-service/controller/http/v1"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
+	"car-sell-buy-system/internal/ads-service/controller/http/v1/payment"
 	"car-sell-buy-system/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
@@ -23,7 +24,12 @@ import (
 //
 //	@externalDocs.description	OpenAPI
 //	@externalDocs.url			https://swagger.io/resources/open-api/
-func NewRouter(handler *gin.Engine, logger logger.Interface, adService ad.Service) {
+func NewRouter(
+	handler *gin.Engine,
+	logger logger.Interface,
+	adService ad.Service,
+	paymentService payment.Service,
+) {
 	// Options.
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -42,7 +48,7 @@ func NewRouter(handler *gin.Engine, logger logger.Interface, adService ad.Servic
 
 	h := handler.Group("/api")
 	{
-		v1.NewController(adService, logger).InitAPI(h)
+		v1.NewController(adService, paymentService, logger).InitAPI(h)
 	}
 
 	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

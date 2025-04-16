@@ -21,7 +21,7 @@ services:
       dockerfile: ./docker/Dockerfile-ads
     container_name: ads
     environment:
-      PG_URL: 'postgres://user:pass@postgres:5432/postgres'
+      PG_URL: 'postgres://postgres:pass@postgres:5432/postgres'
     ports:
       - "8989:80"
     volumes:
@@ -37,7 +37,7 @@ services:
       dockerfile: ./docker/Dockerfile-sso
     container_name: sso
     environment:
-      PG_URL: 'postgres://user:pass@postgres:5432/postgres'
+      PG_URL: 'postgres://postgres:pass@postgres:5432/postgres'
     ports:
       - "50051:50051"
       - "8787:80"
