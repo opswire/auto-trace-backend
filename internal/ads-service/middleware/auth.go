@@ -68,13 +68,15 @@ func RequiredAuthMiddleware(logger logger.Interface) gin.HandlerFunc {
 			return
 		}
 
-		if response == nil && !response.Valid {
+		if response == nil || !response.Valid {
 			logger.Error(fmt.Sprintf("RequiredAuthMiddleware: User is not logined: %v", err))
 
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Доступ запрещен!"})
 			c.Abort()
 			return
 		}
+
+		logger.Debug(fmt.Sprintf("Response from SSO: %d", response.UserId))
 
 		c.Set("userId", response.UserId)
 		c.Next()

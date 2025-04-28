@@ -7,7 +7,7 @@ const (
 )
 
 type response struct {
-	Error string `json:"error" example:"message"`
+	Error string `json:"error" example:"chat"`
 }
 
 func errorResponse(c *gin.Context, code int, msg string) {

@@ -1,9 +1,11 @@
 package http
 
 import (
+	"car-sell-buy-system/config"
 	_ "car-sell-buy-system/docs" // Swagger docs.
 	v1 "car-sell-buy-system/internal/ads-service/controller/http/v1"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
+	"car-sell-buy-system/internal/ads-service/controller/http/v1/chat"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/payment"
 	"car-sell-buy-system/pkg/logger"
 	"github.com/gin-gonic/gin"
@@ -27,8 +29,10 @@ import (
 func NewRouter(
 	handler *gin.Engine,
 	logger logger.Interface,
+	config *config.Config,
 	adService ad.Service,
 	paymentService payment.Service,
+	chatService chat.Service,
 ) {
 	// Options.
 	handler.Use(gin.Logger())
@@ -46,9 +50,17 @@ func NewRouter(
 	)
 	prometheus.MustRegister(metric)
 
+	handler.Static("/storage", "./storage")
+
 	h := handler.Group("/api")
 	{
-		v1.NewController(adService, paymentService, logger).InitAPI(h)
+		v1.NewController(
+			adService,
+			paymentService,
+			chatService,
+			logger,
+			config,
+		).InitAPI(h)
 	}
 
 	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

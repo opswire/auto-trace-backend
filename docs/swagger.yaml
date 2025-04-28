@@ -18,6 +18,8 @@ definitions:
     properties:
       brand:
         type: string
+      created_at:
+        type: string
       description:
         type: string
       id:
@@ -31,6 +33,8 @@ definitions:
       price:
         type: number
       title:
+        type: string
+      updated_at:
         type: string
       vin:
         type: string
@@ -63,7 +67,7 @@ definitions:
   handler.ErrorResponse:
     properties:
       error:
-        example: message
+        example: chat
         type: string
     type: object
   nft.NFT:
@@ -130,6 +134,11 @@ definitions:
         type: string
       user_id:
         type: integer
+    type: object
+  payment.StatusChangedResponse:
+    properties:
+      status:
+        type: string
     type: object
   tariff.Tariff:
     properties:
@@ -282,6 +291,42 @@ paths:
       tags:
       - NFT
   /api/v1/ads/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete car advertisement
+      parameters:
+      - description: Ad data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ad.StoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete advertisement
+      tags:
+      - Ads
     get:
       consumes:
       - application/json
@@ -308,6 +353,42 @@ paths:
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
       summary: Get advertisement by ID
+      tags:
+      - Ads
+    patch:
+      consumes:
+      - application/json
+      description: Update new car advertisement
+      parameters:
+      - description: Ad data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ad.StoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/ad.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update new advertisement
       tags:
       - Ads
   /api/v1/favorites:
@@ -341,7 +422,7 @@ paths:
       - BearerAuth: []
       summary: Add/remove ad to favorites
       tags:
-      - Ads
+      - Favorites
   /api/v1/payments:
     post:
       consumes:
@@ -370,6 +451,36 @@ paths:
       security:
       - BearerAuth: []
       summary: Создание платежа
+      tags:
+      - Payments
+  /api/v1/payments/webhook:
+    post:
+      consumes:
+      - application/json
+      description: Обработка вебхука и смена статуса платежа
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/payment.StatusChangedResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Нотификация платежа
       tags:
       - Payments
 swagger: "2.0"

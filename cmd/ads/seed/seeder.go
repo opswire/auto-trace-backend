@@ -1,7 +1,6 @@
 package main
 
 import (
-	entity2 "car-sell-buy-system/internal/ads-service/entity"
 	"car-sell-buy-system/internal/sso-service/entity"
 	"car-sell-buy-system/pkg/postgres"
 	"context"

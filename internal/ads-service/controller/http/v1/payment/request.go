@@ -4,14 +4,31 @@ import "car-sell-buy-system/internal/ads-service/domain/payment"
 
 type CreatePaymentRequest struct {
 	AdId     int64 `json:"ad_id"`
-	UserId   int64 `json:"user_id"`
 	TariffId int64 `json:"tariff_id"`
 }
 
-func (r CreatePaymentRequest) toDTO() payment.CreatePaymentDto {
+func (r CreatePaymentRequest) toDTO(userId int64) payment.CreatePaymentDto {
 	return payment.CreatePaymentDto{
 		AdId:     r.AdId,
-		UserId:   r.UserId,
+		UserId:   userId,
 		TariffId: r.TariffId,
+	}
+}
+
+type WebhookPaymentRequest struct {
+	Type   string `json:"type"`
+	Event  string `json:"event"`
+	Object struct {
+		Id     string `json:"id"`
+		Status string `json:"status"`
+		Paid   bool   `json:"paid"`
+	} `json:"object"`
+}
+
+func (r WebhookPaymentRequest) toDTO() payment.ProcessWebhookPaymentDto {
+	return payment.ProcessWebhookPaymentDto{
+		TransactionId: r.Object.Id,
+		Status:        r.Object.Status,
+		Paid:          r.Object.Paid,
 	}
 }

@@ -7,6 +7,7 @@ import (
 
 type Repository interface {
 	Store(ctx context.Context, payment Payment) (Payment, error)
+	UpdateStatusByTransactionId(ctx context.Context, transactionId string, status string) error
 }
 
 type TariffRepository interface {
@@ -15,6 +16,7 @@ type TariffRepository interface {
 
 type ApiRepository interface {
 	CreatePayment(ctx context.Context, payment Payment) (Payment, error)
+	ConfirmPayment(ctx context.Context, transactionId string) (Payment, error)
 }
 
 type Service struct {
@@ -54,4 +56,23 @@ func (s *Service) CreatePayment(ctx context.Context, dto CreatePaymentDto) (Paym
 	}
 
 	return p, nil
+}
+
+func (s *Service) ProcessWebhook(ctx context.Context, dto ProcessWebhookPaymentDto) (string, error) {
+	status := dto.Status
+
+	if status == "waiting_for_capture" {
+		response, err := s.apiRepository.ConfirmPayment(ctx, dto.TransactionId)
+		if err != nil {
+			return "", nil
+		}
+
+		status = response.Status
+	}
+
+	if err := s.repository.UpdateStatusByTransactionId(ctx, dto.TransactionId, status); err != nil {
+		return "", err
+	}
+
+	return status, nil
 }

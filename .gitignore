@@ -3,3 +3,4 @@
 .jetclient
 /coverage.txt
 tmp/
+storage/

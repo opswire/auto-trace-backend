@@ -18,6 +18,8 @@ func (f *AdSorter) GetSorterOptionByField(field string, direction sqlutil.Sortin
 		sorter, err = sortById(direction)
 	case "title":
 		sorter, err = sortByTitle(direction)
+	case "price":
+		sorter, err = sortByPrice(direction)
 	}
 	if err != nil {
 		return nil, err
@@ -35,5 +37,11 @@ func sortById(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) {
 func sortByTitle(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) {
 	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
 		return builder.OrderBy(fmt.Sprintf("ads.title %s", direction))
+	}, nil
+}
+
+func sortByPrice(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) {
+	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
+		return builder.OrderBy(fmt.Sprintf("ads.price %s", direction))
 	}, nil
 }

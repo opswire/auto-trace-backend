@@ -9,15 +9,19 @@ import (
 type AdFilter struct {
 }
 
-func (f *AdFilter) GetFilterOptionByField(field, value string) (sqlutil.FilterOption, error) {
+func (f *AdFilter) GetFilterOptionByField(field string, value string) (sqlutil.FilterOption, error) {
 	var filter sqlutil.FilterOption
 	var err error
 
 	switch field {
 	case "title":
 		filter, err = filterByTitle(value)
+	case "description":
+		filter, err = filterByDescription(value)
 	case "brand":
 		filter, err = filterByBrand(value)
+	case "is_favorite":
+		filter, err = filterByFavorite(value)
 	}
 	if err != nil {
 		return nil, err
@@ -26,14 +30,30 @@ func (f *AdFilter) GetFilterOptionByField(field, value string) (sqlutil.FilterOp
 	return filter, nil
 }
 
-func filterByTitle(title string) (sqlutil.FilterOption, error) {
+func filterByTitle(value string) (sqlutil.FilterOption, error) {
 	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
-		return builder.Where(squirrel.Like{"ads.title": fmt.Sprintf("%%%s%%", title)})
+		return builder.Where(squirrel.Like{"ads.title": fmt.Sprintf("%%%s%%", value)})
 	}, nil
 }
 
-func filterByBrand(brand string) (sqlutil.FilterOption, error) {
+func filterByDescription(value string) (sqlutil.FilterOption, error) {
 	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
-		return builder.Where(squirrel.Like{"ads.brand": fmt.Sprintf("%%%s%%", brand)})
+		return builder.Where(squirrel.Like{"ads.description": "%" + value + "%"})
+	}, nil
+}
+
+func filterByBrand(value string) (sqlutil.FilterOption, error) {
+	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
+		return builder.Where(squirrel.Like{"ads.brand": fmt.Sprintf("%%%s%%", value)})
+	}, nil
+}
+
+func filterByFavorite(isFavorite string) (sqlutil.FilterOption, error) {
+	return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
+		if isFavorite == "true" {
+			return builder.Where("user_favorites.ad_id IS NOT NULL")
+		}
+
+		return builder
 	}, nil
 }

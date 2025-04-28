@@ -10,7 +10,7 @@ type FiltersRequest map[string]string
 type FilterOption func(builder squirrel.SelectBuilder) squirrel.SelectBuilder
 
 type Filterable interface {
-	GetFilterOptionByField(field, value string) (FilterOption, error)
+	GetFilterOptionByField(field string, value string) (FilterOption, error)
 }
 
 func ApplyFilters(builder squirrel.SelectBuilder, filterModel Filterable, filtersRequest FiltersRequest) (squirrel.SelectBuilder, error) {

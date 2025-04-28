@@ -3,16 +3,31 @@ package ad
 import (
 	"car-sell-buy-system/pkg/pagination"
 	"car-sell-buy-system/pkg/sqlutil"
+	"car-sell-buy-system/pkg/storage/local"
 )
 
 type StoreDTO struct {
-	Title         string
-	Description   string
-	Price         float64
-	Vin           string
-	Brand         string
-	Model         string
-	YearOfRelease int64
+	Title           string
+	Description     string
+	Price           float64
+	Vin             string
+	Brand           string
+	Model           string
+	YearOfRelease   int64
+	Image           *local.UploadedFile
+	CurrentImageUrl string
+}
+
+type UpdateDTO struct {
+	Title           string
+	Description     string
+	Price           float64
+	Vin             string
+	Brand           string
+	Model           string
+	YearOfRelease   int64
+	Image           *local.UploadedFile
+	CurrentImageUrl string
 }
 
 type ListDTO struct {

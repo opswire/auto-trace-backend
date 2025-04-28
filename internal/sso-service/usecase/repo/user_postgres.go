@@ -26,12 +26,12 @@ func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*entity.User, 
 		Where(squirrel.Eq{"users.email": email}).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - r.Builder: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByEmail - r.Builder: %w", err)
 	}
 
 	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - r.Pool.Query: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByEmail - r.Pool.Query: %w", err)
 	}
 
 	user, err := pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[entity.User])
@@ -39,7 +39,7 @@ func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*entity.User, 
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - pgx.CollectOneRow: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByEmail - pgx.CollectOneRow: %w", err)
 	}
 
 	return user, nil
@@ -66,6 +66,32 @@ func (r *UserRepo) Store(ctx context.Context, user entity.User) (entity.User, er
 	err = row.Scan(&user.Id)
 	if err != nil {
 		return entity.User{}, fmt.Errorf("UserRepo - Store - row.Scan: %w", err)
+	}
+
+	return user, nil
+}
+
+func (r *UserRepo) GetById(ctx context.Context, id int64) (*entity.User, error) {
+	sql, args, err := r.Builder.
+		Select("*").
+		From("users").
+		Where(squirrel.Eq{"users.id": id}).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - GetById - r.Builder: %w", err)
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - GetById - r.Pool.Query: %w", err)
+	}
+
+	user, err := pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[entity.User])
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - GetById - pgx.CollectOneRow: %w", err)
 	}
 
 	return user, nil

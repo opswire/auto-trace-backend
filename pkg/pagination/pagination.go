@@ -17,7 +17,7 @@ type Params struct {
 func (p *Params) ApplyPaginationToBuilder(builder squirrel.SelectBuilder) squirrel.SelectBuilder {
 	return builder.
 		Limit(p.PerPage).
-		Offset(p.Page)
+		Offset((p.Page - 1) * p.PerPage)
 }
 
 type ListRange struct {

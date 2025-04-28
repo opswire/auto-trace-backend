@@ -9,12 +9,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v5"
 )
 
 const (
-	adTableName            = "ads"
-	userFavoritesTableName = "user_favorites"
+	AdTableName            = "ads"
+	UserFavoritesTableName = "user_favorites"
 )
 
 type AdRepository struct {
@@ -28,25 +27,68 @@ func NewAdRepository(pg *postgres.Postgres) *AdRepository {
 }
 
 func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
-	sql, args, err := r.Builder.
+	userId := ctx.Value("userId")
+	fmt.Println("userId: ", userId)
+
+	selectBuilder := r.Builder.
 		Select(
 			// ad
-			sqlutil.TableColumn(adTableName, "id"),
-			sqlutil.TableColumn(adTableName, "title"),
-			sqlutil.TableColumn(adTableName, "description"),
-			sqlutil.TableColumn(adTableName, "price"),
-			sqlutil.TableColumn(adTableName, "vin"),
-			sqlutil.TableColumn(adTableName, "is_token_minted"),
-			sqlutil.TableColumn(adTableName, "brand"),
-			sqlutil.TableColumn(adTableName, "model"),
-			sqlutil.TableColumn(adTableName, "year_of_release"),
-		).
-		From(adTableName).
-		Where(squirrel.Eq{sqlutil.TableColumn(adTableName, "id"): id}).
+			sqlutil.TableColumn(AdTableName, "id"),
+			sqlutil.TableColumn(AdTableName, "title"),
+			sqlutil.TableColumn(AdTableName, "description"),
+			sqlutil.TableColumn(AdTableName, "price"),
+			sqlutil.TableColumn(AdTableName, "vin"),
+			sqlutil.TableColumn(AdTableName, "is_token_minted"),
+			sqlutil.TableColumn(AdTableName, "brand"),
+			sqlutil.TableColumn(AdTableName, "model"),
+			sqlutil.TableColumn(AdTableName, "year_of_release"),
+			sqlutil.TableColumn(AdTableName, "image_url"),
+			sqlutil.TableColumn(AdTableName, "user_id"),
+			sqlutil.TableColumn(AdTableName, "created_at"),
+			sqlutil.TableColumn(AdTableName, "updated_at"),
+		)
+
+	if userId != nil {
+		selectBuilder = selectBuilder.Column(
+			squirrel.Alias(
+				squirrel.
+					Case().
+					When(
+						squirrel.
+							Select("1").
+							Prefix("EXISTS (").
+							From("chats").
+							Where(squirrel.And{
+								squirrel.Eq{"chats.buyer_id": userId},
+								squirrel.Expr("chats.seller_id = ads.user_id"),
+								squirrel.Expr("chats.ad_id = ads.id"),
+							}).
+							Suffix(")"),
+						"true",
+					).
+					Else("false"),
+				"chat_exists",
+			),
+		)
+	} else {
+		selectBuilder = selectBuilder.Column("false AS chat_exists")
+	}
+
+	sql, args, err := selectBuilder.
+		Column("p1.status").
+		Column("p1.expires_at").
+		Column("p1.tariff_id").
+		From(AdTableName).
+		LeftJoin("payments p1 on p1.ad_id = ads.id").
+		JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at < p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id < p2.payment_id)))").
+		Where("p2.payment_id IS NULL").
+		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
 		ToSql()
 	if err != nil {
 		return ad.Ad{}, fmt.Errorf("AdRepository - GetById - r.Builder: %w", err)
 	}
+	fmt.Println("sql: ", sql)
+	fmt.Println("args: ", args)
 
 	var adv ad.Ad
 	err = r.Pool.
@@ -61,6 +103,14 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			&adv.Brand,
 			&adv.Model,
 			&adv.YearOfRelease,
+			&adv.ImageUrl,
+			&adv.UserId,
+			&adv.CreatedAt,
+			&adv.UpdatedAt,
+			&adv.ChatExists,
+			&adv.Promotion.Status,
+			&adv.Promotion.ExpiresAt,
+			&adv.Promotion.TariffId,
 		)
 	if err != nil {
 		return ad.Ad{}, fmt.Errorf("AdRepository - GetById - row.Scan: %w", err)
@@ -71,7 +121,7 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 
 func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error) {
 	sql, args, err := r.Builder.
-		Insert(adTableName).
+		Insert(AdTableName).
 		Columns(
 			"title",
 			"description",
@@ -81,6 +131,7 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			"model",
 			"year_of_release",
 			"is_token_minted",
+			"image_url",
 		).
 		Values(
 			dto.Title,
@@ -91,6 +142,7 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			dto.Model,
 			dto.YearOfRelease,
 			false,
+			dto.CurrentImageUrl,
 		).
 		Suffix("RETURNING id").
 		ToSql()
@@ -108,6 +160,7 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 		YearOfRelease: dto.YearOfRelease,
 		IsTokenMinted: false,
 		IsFavorite:    false,
+		ImageUrl:      dto.Image.Path,
 	}
 	err = r.Pool.
 		QueryRow(ctx, sql, args...).
@@ -119,32 +172,70 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 	return adv, nil
 }
 
+func (r *AdRepository) Update(ctx context.Context, id int64, dto ad.UpdateDTO) error {
+	sql, args, err := r.Builder.
+		Update(AdTableName).
+		Set("title", dto.Title).
+		Set("description", dto.Description).
+		Set("price", dto.Price).
+		Set("vin", dto.Vin).
+		Set("brand", dto.Brand).
+		Set("model", dto.Model).
+		Set("year_of_release", dto.YearOfRelease).
+		Set("image_url", dto.CurrentImageUrl).
+		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("AdRepository - Update - r.Builder: %w", err)
+	}
+
+	_, err = r.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return fmt.Errorf("AdRepository - Store - row.Scan: %w", err)
+	}
+
+	return nil
+}
+
 func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint64, error) {
 	userId := ctx.Value("userId")
 	fmt.Println("userId: ", userId)
 
 	builder := r.Builder.
 		Select(
-			sqlutil.TableColumn(adTableName, "id"),
-			sqlutil.TableColumn(adTableName, "title"),
-			sqlutil.TableColumn(adTableName, "description"),
-			sqlutil.TableColumn(adTableName, "price"),
-			sqlutil.TableColumn(adTableName, "vin"),
-			sqlutil.TableColumn(adTableName, "is_token_minted"),
-			sqlutil.TableColumn(adTableName, "brand"),
-			sqlutil.TableColumn(adTableName, "model"),
-			sqlutil.TableColumn(adTableName, "year_of_release"),
-			"CASE WHEN user_favorites.user_id = @userId THEN true ELSE false END AS is_favorite",
-			"COUNT(*) OVER() AS total",
+			sqlutil.TableColumn(AdTableName, "id"),
+			sqlutil.TableColumn(AdTableName, "title"),
+			sqlutil.TableColumn(AdTableName, "description"),
+			sqlutil.TableColumn(AdTableName, "price"),
+			sqlutil.TableColumn(AdTableName, "vin"),
+			sqlutil.TableColumn(AdTableName, "is_token_minted"),
+			sqlutil.TableColumn(AdTableName, "brand"),
+			sqlutil.TableColumn(AdTableName, "model"),
+			sqlutil.TableColumn(AdTableName, "year_of_release"),
+			sqlutil.TableColumn(AdTableName, "image_url"),
+			sqlutil.TableColumn(AdTableName, "user_id"),
+			sqlutil.TableColumn(AdTableName, "created_at"),
+			sqlutil.TableColumn(AdTableName, "updated_at"),
 		).
-		From(adTableName).
-		LeftJoin(userFavoritesTableName + " ON " + sqlutil.TableColumn(userFavoritesTableName, "ad_id") + " = " + sqlutil.TableColumn(adTableName, "id")).
-		From(adTableName)
+		Column(squirrel.Alias(squirrel.Case().When(squirrel.Expr("user_favorites.user_id = ?", userId), "true").Else("false"), "is_favorite")).
+		Column(squirrel.Alias(squirrel.Expr("COUNT(*) OVER()"), "total")).
+		Column("p1.status").
+		Column("p1.expires_at").
+		Column("p1.tariff_id").
+		LeftJoin("payments p1 on p1.ad_id = ads.id").
+		JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at < p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id < p2.payment_id)))").
+		Where("p2.payment_id IS NULL").
+		From(AdTableName).
+		LeftJoin(UserFavoritesTableName + " ON " + sqlutil.TableColumn(UserFavoritesTableName, "ad_id") + " = " + sqlutil.TableColumn(AdTableName, "id")).
+		From(AdTableName)
 
 	builder, err := sqlutil.ApplyFilters(builder, &filter.AdFilter{}, dto.Filter)
 	if err != nil {
 		return nil, 0, fmt.Errorf("AdRepository - List - sqlutil.ApplyFilters: %w", err)
 	}
+
+	builder = builder.
+		OrderBy("p1.tariff_id DESC nulls last")
 
 	builder, err = sqlutil.ApplySorts(builder, &sort.AdSorter{}, dto.Sort)
 	if err != nil {
@@ -153,16 +244,14 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 
 	builder = dto.Pagination.ApplyPaginationToBuilder(builder)
 
-	sql, _, err := builder.ToSql()
+	sql, args, err := builder.ToSql()
 	if err != nil {
 		return nil, 0, fmt.Errorf("AdRepository - List - r.Builder: %w", err)
 	}
-	fmt.Println(sql)
+	fmt.Println("sql: ", sql)
+	fmt.Println("args: ", args)
 
-	args := pgx.NamedArgs{
-		"userId": userId,
-	}
-	rows, err := r.Pool.Query(ctx, sql, args)
+	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("AdRepository - List - r.Pool.Query: %w", err)
 	}
@@ -181,8 +270,15 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 			&adv.Brand,
 			&adv.Model,
 			&adv.YearOfRelease,
+			&adv.ImageUrl,
+			&adv.UserId,
+			&adv.CreatedAt,
+			&adv.UpdatedAt,
 			&adv.IsFavorite,
 			&count,
+			&adv.Promotion.Status,
+			&adv.Promotion.ExpiresAt,
+			&adv.Promotion.TariffId,
 		)
 		if err != nil {
 			return nil, 0, fmt.Errorf("AdRepository - List - rows.Scan: %w", err)
@@ -191,6 +287,22 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 	}
 
 	return ads, count, nil
+}
+
+func (r *AdRepository) Delete(ctx context.Context, id int64) error {
+	sql, args, err := r.Builder.
+		Delete(AdTableName).
+		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("AdRepository - Delete - r.Builder: %w", err)
+	}
+
+	if _, err = r.Pool.Exec(ctx, sql, args...); err != nil {
+		return fmt.Errorf("AdRepository - Delete - r.Pool.Exec: %w", err)
+	}
+
+	return nil
 }
 
 func (r *AdRepository) HandleFavorite(ctx context.Context, adId, userId int64) error {

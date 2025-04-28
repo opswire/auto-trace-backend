@@ -24,7 +24,7 @@ func NewBaseHandler(logger logger.Interface) *BaseHandler {
 }
 
 type ErrorResponse struct {
-	Error string `json:"error" example:"message"`
+	Error string `json:"error" example:"chat"`
 }
 
 func (h *BaseHandler) ErrorResponse(c *gin.Context, status int, err error, message string) {

@@ -8,10 +8,11 @@ import (
 type (
 	// Config -.
 	Config struct {
-		App  App  `yaml:"ads"`
-		Http HTTP `yaml:"http"`
-		Log  Log  `yaml:"logger"`
-		Pg   PG   `yaml:"postgres"`
+		App     App  `yaml:"ads"`
+		Http    HTTP `yaml:"http"`
+		Log     Log  `yaml:"logger"`
+		Pg      PG   `yaml:"postgres"`
+		Yokassa Yokassa
 	}
 
 	// App -.
@@ -35,6 +36,14 @@ type (
 		PoolMax   int    `env-required:"true" yaml:"pool_max" env:"PG_POOL_MAX"`
 		URL       string `env-required:"true"                 env:"PG_URL"`
 		ExposeURL string `env-required:"true"                 env:"PG_EXPOSE_URL"`
+	}
+
+	Yokassa struct {
+		Url                       string `env:"YOKASSA_URL"`
+		RedirectUrl               string `env:"YOKASSA_REDIRECT_URL"`
+		Username                  string `env:"YOKASSA_USERNAME"`
+		Password                  string `env:"YOKASSA_PASSWORD"`
+		WebhookAllowedIpAddresses string `env:"YOKASSA_WEBHOOK_WHITELIST"`
 	}
 )
 

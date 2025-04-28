@@ -33,3 +33,7 @@ func newResponse(p payment.Payment) Response {
 		ExpiresAt:        p.ExpiresAt,
 	}
 }
+
+type StatusChangedResponse struct {
+	Status string `json:"status"`
+}
