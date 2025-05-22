@@ -321,7 +321,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update new car advertisement",
+                "description": "Update car advertisement",
                 "consumes": [
                     "application/json"
                 ],
@@ -331,7 +331,7 @@ const docTemplate = `{
                 "tags": [
                     "Ads"
                 ],
-                "summary": "Update new advertisement",
+                "summary": "Update advertisement",
                 "parameters": [
                     {
                         "description": "Ad data",
@@ -339,7 +339,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ad.StoreRequest"
+                            "$ref": "#/definitions/ad.UpdateRequest"
                         }
                     }
                 ],
@@ -355,7 +355,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/ad.Response"
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -370,6 +370,224 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/chats": {
+            "get": {
+                "description": "Get chats list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Get chats list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/chat.ListChatResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create new chat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Create new chat",
+                "parameters": [
+                    {
+                        "description": "Chat data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.StoreChatRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/chat.ChatResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/chats/{id}/message": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create new message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Create new message",
+                "parameters": [
+                    {
+                        "description": "Message data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.StoreMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/chat.MessageResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/chats/{id}/messages": {
+            "get": {
+                "description": "Get messages list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Get messages list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/chat.ListMessageResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/handler.ErrorResponse"
                         }
@@ -404,6 +622,157 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/ad.HandleFavoriteRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.BasicResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/nfts": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create new nft",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nfts"
+                ],
+                "summary": "Create new nft",
+                "parameters": [
+                    {
+                        "description": "Nft data",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/nft.StoreNftRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/nft.Response"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/nfts/{vin}": {
+            "get": {
+                "description": "Get nft by Car Vin",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nfts"
+                ],
+                "summary": "Get nft by Vin",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vin",
+                        "name": "vin",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.BasicResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/nfts/{vin}/record": {
+            "post": {
+                "description": "Add nft service record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nfts"
+                ],
+                "summary": "Add nft service record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vin",
+                        "name": "vin",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -562,6 +931,9 @@ const docTemplate = `{
                 "brand": {
                     "type": "string"
                 },
+                "chat_exists": {
+                    "type": "boolean"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -570,6 +942,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
                 },
                 "is_favorite": {
                     "type": "boolean"
@@ -583,11 +958,17 @@ const docTemplate = `{
                 "price": {
                     "type": "number"
                 },
+                "promotion": {
+                    "$ref": "#/definitions/internal_ads-service_controller_http_v1_ad.Promotion"
+                },
                 "title": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 },
                 "vin": {
                     "type": "string"
@@ -598,28 +979,98 @@ const docTemplate = `{
             }
         },
         "ad.StoreRequest": {
+            "type": "object"
+        },
+        "ad.UpdateRequest": {
+            "type": "object"
+        },
+        "chat.ChatResponse": {
             "type": "object",
             "properties": {
-                "brand": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "model": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "vin": {
-                    "type": "string"
-                },
-                "year_of_release": {
+                "ad_id": {
                     "type": "integer"
+                },
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "seller_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "chat.ListChatResponse": {
+            "type": "object",
+            "properties": {
+                "chats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/chat.ChatResponse"
+                    }
+                }
+            }
+        },
+        "chat.ListMessageResponse": {
+            "type": "object",
+            "properties": {
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/chat.MessageResponse"
+                    }
+                }
+            }
+        },
+        "chat.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "chat_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_read": {
+                    "type": "boolean"
+                },
+                "mine": {
+                    "type": "boolean"
+                },
+                "sender_id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "chat.StoreChatRequest": {
+            "type": "object",
+            "properties": {
+                "ad_id": {
+                    "type": "integer"
+                },
+                "seller_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "chat.StoreMessageRequest": {
+            "type": "object",
+            "properties": {
+                "chat_id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
                 }
             }
         },
@@ -641,6 +1092,51 @@ const docTemplate = `{
                 }
             }
         },
+        "internal_ads-service_controller_http_v1_ad.Promotion": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "expires_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tariff_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_ads-service_domain_nft.TokenMetadata": {
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "trait_type": {
+                                "type": "string"
+                            },
+                            "value": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "nft.NFT": {
             "type": "object",
             "properties": {
@@ -657,14 +1153,77 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "token_metadata": {
-                    "$ref": "#/definitions/nft.TokenMetadata"
+                    "$ref": "#/definitions/internal_ads-service_domain_nft.TokenMetadata"
                 },
                 "token_url": {
                     "type": "string"
                 }
             }
         },
-        "nft.TokenMetadata": {
+        "nft.Response": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "is_minted": {
+                    "type": "boolean"
+                },
+                "metadata_url": {
+                    "type": "string"
+                },
+                "token_data": {
+                    "$ref": "#/definitions/nft.TokenDataResponse"
+                },
+                "token_id": {
+                    "type": "integer"
+                },
+                "vin": {
+                    "type": "string"
+                }
+            }
+        },
+        "nft.StoreNftRequest": {
+            "type": "object",
+            "required": [
+                "vin"
+            ],
+            "properties": {
+                "metadata_url": {
+                    "type": "string"
+                },
+                "vin": {
+                    "type": "string"
+                }
+            }
+        },
+        "nft.TokenDataResponse": {
+            "type": "object",
+            "properties": {
+                "chain_id": {
+                    "type": "integer"
+                },
+                "chain_name": {
+                    "type": "string"
+                },
+                "contract_addr": {
+                    "type": "string"
+                },
+                "token_id": {
+                    "type": "integer"
+                },
+                "token_metadata": {
+                    "$ref": "#/definitions/nft.TokenMetadataResponse"
+                },
+                "token_url": {
+                    "type": "string"
+                },
+                "tx": {
+                    "type": "string"
+                }
+            }
+        },
+        "nft.TokenMetadataResponse": {
             "type": "object",
             "properties": {
                 "attributes": {
@@ -791,10 +1350,10 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "http://localhost:8989",
+	Host:             "http://localhost:8686",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Ads Service API",
+	Title:            "Nft Service API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

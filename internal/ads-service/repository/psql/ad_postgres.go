@@ -38,7 +38,6 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			sqlutil.TableColumn(AdTableName, "description"),
 			sqlutil.TableColumn(AdTableName, "price"),
 			sqlutil.TableColumn(AdTableName, "vin"),
-			sqlutil.TableColumn(AdTableName, "is_token_minted"),
 			sqlutil.TableColumn(AdTableName, "brand"),
 			sqlutil.TableColumn(AdTableName, "model"),
 			sqlutil.TableColumn(AdTableName, "year_of_release"),
@@ -46,7 +45,15 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			sqlutil.TableColumn(AdTableName, "user_id"),
 			sqlutil.TableColumn(AdTableName, "created_at"),
 			sqlutil.TableColumn(AdTableName, "updated_at"),
-		)
+			sqlutil.TableColumn(AdTableName, "category"),
+			sqlutil.TableColumn(AdTableName, "reg_number"),
+			sqlutil.TableColumn(AdTableName, "type"),
+			sqlutil.TableColumn(AdTableName, "color"),
+			sqlutil.TableColumn(AdTableName, "hp"),
+			sqlutil.TableColumn(AdTableName, "full_weight"),
+			sqlutil.TableColumn(AdTableName, "solo_weight"),
+		).
+		Column(squirrel.Alias(squirrel.Case().When(squirrel.Eq{"nfts.is_minted": "true"}, "true").Else("false"), "is_favorite"))
 
 	if userId != nil {
 		selectBuilder = selectBuilder.Column(
@@ -80,6 +87,7 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 		Column("p1.tariff_id").
 		From(AdTableName).
 		LeftJoin("payments p1 on p1.ad_id = ads.id").
+		LeftJoin("nfts on nfts.vin = ads.vin").
 		JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at < p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id < p2.payment_id)))").
 		Where("p2.payment_id IS NULL").
 		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
@@ -99,7 +107,6 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			&adv.Description,
 			&adv.Price,
 			&adv.Vin,
-			&adv.IsTokenMinted,
 			&adv.Brand,
 			&adv.Model,
 			&adv.YearOfRelease,
@@ -107,6 +114,14 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			&adv.UserId,
 			&adv.CreatedAt,
 			&adv.UpdatedAt,
+			&adv.Category,
+			&adv.RegNumber,
+			&adv.Type,
+			&adv.Color,
+			&adv.Hp,
+			&adv.FullWeight,
+			&adv.SoloWeight,
+			&adv.IsTokenMinted,
 			&adv.ChatExists,
 			&adv.Promotion.Status,
 			&adv.Promotion.ExpiresAt,
@@ -132,6 +147,13 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			"year_of_release",
 			"is_token_minted",
 			"image_url",
+			"category",
+			"reg_number",
+			"type",
+			"color",
+			"hp",
+			"full_weight",
+			"solo_weight",
 		).
 		Values(
 			dto.Title,
@@ -143,6 +165,13 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			dto.YearOfRelease,
 			false,
 			dto.CurrentImageUrl,
+			dto.Category,
+			dto.RegNumber,
+			dto.Type,
+			dto.Color,
+			dto.Hp,
+			dto.FullWeight,
+			dto.SoloWeight,
 		).
 		Suffix("RETURNING id").
 		ToSql()
@@ -183,6 +212,13 @@ func (r *AdRepository) Update(ctx context.Context, id int64, dto ad.UpdateDTO) e
 		Set("model", dto.Model).
 		Set("year_of_release", dto.YearOfRelease).
 		Set("image_url", dto.CurrentImageUrl).
+		Set("category", dto.Category).
+		Set("reg_number", dto.RegNumber).
+		Set("type", dto.Type).
+		Set("color", dto.Color).
+		Set("hp", dto.Hp).
+		Set("full_weight", dto.FullWeight).
+		Set("solo_weight", dto.SoloWeight).
 		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
 		ToSql()
 	if err != nil {
@@ -208,7 +244,6 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 			sqlutil.TableColumn(AdTableName, "description"),
 			sqlutil.TableColumn(AdTableName, "price"),
 			sqlutil.TableColumn(AdTableName, "vin"),
-			sqlutil.TableColumn(AdTableName, "is_token_minted"),
 			sqlutil.TableColumn(AdTableName, "brand"),
 			sqlutil.TableColumn(AdTableName, "model"),
 			sqlutil.TableColumn(AdTableName, "year_of_release"),
@@ -216,13 +251,22 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 			sqlutil.TableColumn(AdTableName, "user_id"),
 			sqlutil.TableColumn(AdTableName, "created_at"),
 			sqlutil.TableColumn(AdTableName, "updated_at"),
+			sqlutil.TableColumn(AdTableName, "category"),
+			sqlutil.TableColumn(AdTableName, "reg_number"),
+			sqlutil.TableColumn(AdTableName, "type"),
+			sqlutil.TableColumn(AdTableName, "color"),
+			sqlutil.TableColumn(AdTableName, "hp"),
+			sqlutil.TableColumn(AdTableName, "full_weight"),
+			sqlutil.TableColumn(AdTableName, "solo_weight"),
 		).
 		Column(squirrel.Alias(squirrel.Case().When(squirrel.Expr("user_favorites.user_id = ?", userId), "true").Else("false"), "is_favorite")).
 		Column(squirrel.Alias(squirrel.Expr("COUNT(*) OVER()"), "total")).
+		Column(squirrel.Alias(squirrel.Case().When(squirrel.Eq{"nfts.is_minted": "true"}, "true").Else("false"), "is_favorite")).
 		Column("p1.status").
 		Column("p1.expires_at").
 		Column("p1.tariff_id").
 		LeftJoin("payments p1 on p1.ad_id = ads.id").
+		LeftJoin("nfts on nfts.vin = ads.vin").
 		JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at < p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id < p2.payment_id)))").
 		Where("p2.payment_id IS NULL").
 		From(AdTableName).
@@ -266,7 +310,6 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 			&adv.Description,
 			&adv.Price,
 			&adv.Vin,
-			&adv.IsTokenMinted,
 			&adv.Brand,
 			&adv.Model,
 			&adv.YearOfRelease,
@@ -274,8 +317,16 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 			&adv.UserId,
 			&adv.CreatedAt,
 			&adv.UpdatedAt,
+			&adv.Category,
+			&adv.RegNumber,
+			&adv.Type,
+			&adv.Color,
+			&adv.Hp,
+			&adv.FullWeight,
+			&adv.SoloWeight,
 			&adv.IsFavorite,
 			&count,
+			&adv.IsTokenMinted,
 			&adv.Promotion.Status,
 			&adv.Promotion.ExpiresAt,
 			&adv.Promotion.TariffId,

@@ -18,12 +18,16 @@ definitions:
     properties:
       brand:
         type: string
+      chat_exists:
+        type: boolean
       created_at:
         type: string
       description:
         type: string
       id:
         type: integer
+      image_url:
+        type: string
       is_favorite:
         type: boolean
       is_token_minted:
@@ -32,31 +36,80 @@ definitions:
         type: string
       price:
         type: number
+      promotion:
+        $ref: '#/definitions/internal_ads-service_controller_http_v1_ad.Promotion'
       title:
         type: string
       updated_at:
         type: string
+      user_id:
+        type: integer
       vin:
         type: string
       year_of_release:
         type: integer
     type: object
   ad.StoreRequest:
+    type: object
+  ad.UpdateRequest:
+    type: object
+  chat.ChatResponse:
     properties:
-      brand:
-        type: string
-      description:
-        type: string
-      model:
-        type: string
-      price:
-        type: number
-      title:
-        type: string
-      vin:
-        type: string
-      year_of_release:
+      ad_id:
         type: integer
+      buyer_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      seller_id:
+        type: integer
+    type: object
+  chat.ListChatResponse:
+    properties:
+      chats:
+        items:
+          $ref: '#/definitions/chat.ChatResponse'
+        type: array
+    type: object
+  chat.ListMessageResponse:
+    properties:
+      messages:
+        items:
+          $ref: '#/definitions/chat.MessageResponse'
+        type: array
+    type: object
+  chat.MessageResponse:
+    properties:
+      chat_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_read:
+        type: boolean
+      mine:
+        type: boolean
+      sender_id:
+        type: integer
+      text:
+        type: string
+    type: object
+  chat.StoreChatRequest:
+    properties:
+      ad_id:
+        type: integer
+      seller_id:
+        type: integer
+    type: object
+  chat.StoreMessageRequest:
+    properties:
+      chat_id:
+        type: integer
+      text:
+        type: string
     type: object
   handler.BasicResponseDTO:
     properties:
@@ -70,6 +123,35 @@ definitions:
         example: chat
         type: string
     type: object
+  internal_ads-service_controller_http_v1_ad.Promotion:
+    properties:
+      enabled:
+        type: boolean
+      expires_at:
+        type: string
+      status:
+        type: string
+      tariff_id:
+        type: integer
+    type: object
+  internal_ads-service_domain_nft.TokenMetadata:
+    properties:
+      attributes:
+        items:
+          properties:
+            trait_type:
+              type: string
+            value:
+              type: string
+          type: object
+        type: array
+      description:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+    type: object
   nft.NFT:
     properties:
       chain_id:
@@ -81,11 +163,52 @@ definitions:
       token_id:
         type: integer
       token_metadata:
-        $ref: '#/definitions/nft.TokenMetadata'
+        $ref: '#/definitions/internal_ads-service_domain_nft.TokenMetadata'
       token_url:
         type: string
     type: object
-  nft.TokenMetadata:
+  nft.Response:
+    properties:
+      created_at:
+        type: string
+      is_minted:
+        type: boolean
+      metadata_url:
+        type: string
+      token_data:
+        $ref: '#/definitions/nft.TokenDataResponse'
+      token_id:
+        type: integer
+      vin:
+        type: string
+    type: object
+  nft.StoreNftRequest:
+    properties:
+      metadata_url:
+        type: string
+      vin:
+        type: string
+    required:
+    - vin
+    type: object
+  nft.TokenDataResponse:
+    properties:
+      chain_id:
+        type: integer
+      chain_name:
+        type: string
+      contract_addr:
+        type: string
+      token_id:
+        type: integer
+      token_metadata:
+        $ref: '#/definitions/nft.TokenMetadataResponse'
+      token_url:
+        type: string
+      tx:
+        type: string
+    type: object
+  nft.TokenMetadataResponse:
     properties:
       attributes:
         items:
@@ -164,13 +287,13 @@ definitions:
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: http://localhost:8989
+host: http://localhost:8686
 info:
   contact: {}
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Ads Service API
+  title: Nft Service API
   version: "1.0"
 paths:
   /api/v1/ads:
@@ -358,14 +481,14 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Update new car advertisement
+      description: Update car advertisement
       parameters:
       - description: Ad data
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/ad.StoreRequest'
+          $ref: '#/definitions/ad.UpdateRequest'
       produces:
       - application/json
       responses:
@@ -376,7 +499,7 @@ paths:
             - $ref: '#/definitions/handler.BasicResponseDTO'
             - properties:
                 data:
-                  $ref: '#/definitions/ad.Response'
+                  type: string
               type: object
         "400":
           description: Bad Request
@@ -388,9 +511,138 @@ paths:
             $ref: '#/definitions/handler.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Update new advertisement
+      summary: Update advertisement
       tags:
       - Ads
+  /api/v1/chats:
+    get:
+      consumes:
+      - application/json
+      description: Get chats list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/chat.ListChatResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get chats list
+      tags:
+      - Chats
+    post:
+      consumes:
+      - application/json
+      description: Create new chat
+      parameters:
+      - description: Chat data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.StoreChatRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/chat.ChatResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new chat
+      tags:
+      - Chats
+  /api/v1/chats/{id}/message:
+    post:
+      consumes:
+      - application/json
+      description: Create new message
+      parameters:
+      - description: Message data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.StoreMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/chat.MessageResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new message
+      tags:
+      - Chats
+  /api/v1/chats/{id}/messages:
+    get:
+      consumes:
+      - application/json
+      description: Get messages list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/chat.ListMessageResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get messages list
+      tags:
+      - Chats
   /api/v1/favorites:
     post:
       consumes:
@@ -423,6 +675,101 @@ paths:
       summary: Add/remove ad to favorites
       tags:
       - Favorites
+  /api/v1/nfts:
+    post:
+      consumes:
+      - application/json
+      description: Create new nft
+      parameters:
+      - description: Nft data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/nft.StoreNftRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/nft.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new nft
+      tags:
+      - Nfts
+  /api/v1/nfts/{vin}:
+    get:
+      consumes:
+      - application/json
+      description: Get nft by Car Vin
+      parameters:
+      - description: Vin
+        in: path
+        name: vin
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.BasicResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get nft by Vin
+      tags:
+      - Nfts
+  /api/v1/nfts/{vin}/record:
+    post:
+      consumes:
+      - application/json
+      description: Add nft service record
+      parameters:
+      - description: Vin
+        in: path
+        name: vin
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.BasicResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Add nft service record
+      tags:
+      - Nfts
   /api/v1/payments:
     post:
       consumes:

@@ -16,6 +16,13 @@ type StoreDTO struct {
 	YearOfRelease   int64
 	Image           *local.UploadedFile
 	CurrentImageUrl string
+	Category        string
+	RegNumber       string
+	Type            string
+	Color           string
+	Hp              string
+	FullWeight      string
+	SoloWeight      string
 }
 
 type UpdateDTO struct {
@@ -28,6 +35,13 @@ type UpdateDTO struct {
 	YearOfRelease   int64
 	Image           *local.UploadedFile
 	CurrentImageUrl string
+	Category        string
+	RegNumber       string
+	Type            string
+	Color           string
+	Hp              string
+	FullWeight      string
+	SoloWeight      string
 }
 
 type ListDTO struct {

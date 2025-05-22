@@ -3,11 +3,21 @@ export
 
 .PHONY: migrate-create migrate-up migrate-down
 
+up:
+	docker compose up -d
+.PHONY: up
+
 swag-init:
 	 swag init -g ./internal/ads-service/controller/http/router.go
 
 swag-fmt:
 	 swag fmt -g ./cmd/ads/main.go
+
+nfts-swag-init:
+	swag init -g ./internal/nft-service/controller/http/router.go
+
+nfts-swag-fmt:
+	swag fmt -g ./cmd/nfts/main.go
 
 migrate-create:
 	migrate create -ext sql -dir migrations -seq $(name)

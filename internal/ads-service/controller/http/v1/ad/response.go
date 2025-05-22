@@ -23,6 +23,13 @@ type Response struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 	ChatExists    bool      `json:"chat_exists"`
 	Promotion     Promotion `json:"promotion"`
+	Category      string    `json:"category"`
+	RegNumber     string    `json:"reg_number"`
+	Type          string    `json:"type"`
+	Color         string    `json:"color"`
+	Hp            string    `json:"hp"`
+	FullWeight    string    `json:"full_weight"`
+	SoloWeight    string    `json:"solo_weight"`
 }
 
 type Promotion struct {
@@ -60,6 +67,13 @@ func newResponse(ad ad.Ad) Response {
 		UpdatedAt:     ad.UpdatedAt,
 		ChatExists:    ad.ChatExists,
 		Promotion:     promotion,
+		Category:      ad.Category,
+		RegNumber:     ad.RegNumber,
+		Type:          ad.Type,
+		Color:         ad.Color,
+		Hp:            ad.Hp,
+		FullWeight:    ad.FullWeight,
+		SoloWeight:    ad.SoloWeight,
 	}
 }
 

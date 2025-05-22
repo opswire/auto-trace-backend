@@ -74,11 +74,22 @@ var migrateDown = &cobra.Command{
 	},
 }
 
+var test = &cobra.Command{
+	Use:   "test",
+	Short: "test",
+	Long:  `test`,
+	//Args:  cobra.ExactArgs(2),
+	Run: func(cmd *cobra.Command, args []string) {
+		//contract.GenerateContract(gener)
+	},
+}
+
 func init() {
 	cfg = config.NewConfig()
 
 	rootCmd.AddCommand(migrateUp)
 	rootCmd.AddCommand(migrateDown)
+	rootCmd.AddCommand(test)
 }
 
 func Execute() {

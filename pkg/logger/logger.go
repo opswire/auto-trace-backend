@@ -74,7 +74,7 @@ func (l *Logger) Error(message interface{}, args ...interface{}) {
 	case string:
 		l.logger.Error().Msgf(message.(string), args...)
 	default:
-		l.log(fmt.Sprintf("%s chat %v has unknown type %v", zerolog.ErrorLevel, message, msg), args...)
+		l.log(fmt.Sprintf("%s nft %v has unknown type %v", zerolog.ErrorLevel, message, msg), args...)
 	}
 }
 
@@ -86,7 +86,7 @@ func (l *Logger) Fatal(message interface{}, args ...interface{}) {
 	case string:
 		l.logger.Fatal().Msgf(message.(string), args...)
 	default:
-		l.log(fmt.Sprintf("%s chat %v has unknown type %v", zerolog.FatalLevel, message, msg), args...)
+		l.log(fmt.Sprintf("%s nft %v has unknown type %v", zerolog.FatalLevel, message, msg), args...)
 	}
 
 	os.Exit(1)
@@ -107,6 +107,6 @@ func (l *Logger) msg(level string, message interface{}, args ...interface{}) {
 	case string:
 		l.log(msg, args...)
 	default:
-		l.log(fmt.Sprintf("%s chat %v has unknown type %v", level, message, msg), args...)
+		l.log(fmt.Sprintf("%s nft %v has unknown type %v", level, message, msg), args...)
 	}
 }

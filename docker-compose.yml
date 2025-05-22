@@ -48,6 +48,22 @@ services:
     depends_on:
       - postgres
 
+  nfts_service:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-nfts
+    container_name: nfts_service
+    environment:
+      PG_URL: 'postgres://postgres:pass@postgres:5432/postgres'
+    ports:
+      - "8686:80"
+    volumes:
+      - ./:/app
+    networks:
+      - net
+    depends_on:
+      - postgres
+
   prometheus:
     image: prom/prometheus
     volumes:

@@ -10,6 +10,7 @@ import (
 
 var (
 	ErrEmptyIDParam        = errors.New("empty id param")
+	ErrEmptyStringParam    = errors.New("empty string param")
 	ErrInvalidID           = errors.New("invalid id param")
 	ErrInvalidPerPageParam = errors.New("invalid per_page param")
 	ErrInvalidPageParam    = errors.New("invalid page param")
@@ -48,6 +49,16 @@ func (h *BaseHandler) ParseIDFromPath(c *gin.Context, param string) (int64, erro
 
 	return id, nil
 }
+
+func (h *BaseHandler) ParseStringFromPath(c *gin.Context, param string) (string, error) {
+	stringParam := c.Param(param)
+	if stringParam == "" {
+		return "", ErrEmptyStringParam
+	}
+
+	return stringParam, nil
+}
+
 func (h *BaseHandler) ParsePaginationParams(c *gin.Context) (pagination.Params, error) {
 	var (
 		params pagination.Params

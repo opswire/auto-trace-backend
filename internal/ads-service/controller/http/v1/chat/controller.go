@@ -168,9 +168,9 @@ func (ctrl *Controller) storeMessage(c *gin.Context) {
 //	@Tags			Chats
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{object}	handler.BasicResponseDTO{data=chat.ListMessageResponse}
-//	@Failure		400		{object}	handler.ErrorResponse
-//	@Failure		404		{object}	handler.ErrorResponse
+//	@Success		200	{object}	handler.BasicResponseDTO{data=chat.ListMessageResponse}
+//	@Failure		400	{object}	handler.ErrorResponse
+//	@Failure		404	{object}	handler.ErrorResponse
 //	@Router			/api/v1/chats/{id}/messages [get]
 func (ctrl *Controller) listMessagesByChatId(c *gin.Context) {
 	userId, _ := c.Get("userId")
@@ -203,9 +203,9 @@ func (ctrl *Controller) listMessagesByChatId(c *gin.Context) {
 //	@Tags			Chats
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{object}	handler.BasicResponseDTO{data=chat.ListChatResponse}
-//	@Failure		400		{object}	handler.ErrorResponse
-//	@Failure		404		{object}	handler.ErrorResponse
+//	@Success		200	{object}	handler.BasicResponseDTO{data=chat.ListChatResponse}
+//	@Failure		400	{object}	handler.ErrorResponse
+//	@Failure		404	{object}	handler.ErrorResponse
 //	@Router			/api/v1/chats [get]
 func (ctrl *Controller) listChats(c *gin.Context) {
 	userId, _ := c.Get("userId")

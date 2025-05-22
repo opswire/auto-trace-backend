@@ -4,9 +4,12 @@ import (
 	"car-sell-buy-system/internal/ads-service/domain/nft"
 	"car-sell-buy-system/pkg/blockchain/conctracts/carhistory"
 	"context"
+	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"io/ioutil"
 	"math/big"
@@ -14,12 +17,13 @@ import (
 )
 
 const (
-	rpcURL        = "https://eth-holesky.g.alchemy.com/v2/CxNXbn3cvcvBDrDOS3lNqK07mHlpeV7Y"
-	contractAddr  = "0x67822D3F49d5B59ADd2B5991dd01d3CaaB9A2eB6"
-	privateKey    = "0xbd67111e535efece52840724c11172321417fd52c08d3bf39e6d745b492df723"
-	chainId       = 17000
-	chainName     = "Ethereum holešky"
-	chainBasicUrl = "https://holesky.etherscan.io"
+	rpcURL         = "https://eth-holesky.g.alchemy.com/v2/CxNXbn3cvcvBDrDOS3lNqK07mHlpeV7Y"
+	contractAddr   = "0x631884DC264999f02E0CFf7D36Cd12Dbd7aEae8f"
+	privateKeyAddr = "672c7a28eea558990b26fc49ffe7aeda99a7d5f13d2e5056ce288afac8eb00ff"
+	chainId        = 17000
+	chainName      = "Ethereum holešky"
+	chainBasicUrl  = "https://holesky.etherscan.io"
+	toAddress      = "0x36b46587441b0CC2De26343233F5DC5539F5D3D9"
 )
 
 type NftEthereumWebAPI struct {
@@ -27,6 +31,62 @@ type NftEthereumWebAPI struct {
 
 func NewNftEthereumWebAPI() *NftEthereumWebAPI {
 	return &NftEthereumWebAPI{}
+}
+
+func (*NftEthereumWebAPI) MintNFT(ctx context.Context, tokenId *big.Int, metadataURI string) error {
+	// 1. Подключение к Ethereum-сети
+	client, err := ethclient.Dial(rpcURL)
+	if err != nil {
+		return fmt.Errorf("ошибка подключения к Ethereum: %v", err)
+	}
+
+	// 2. Создание экземпляра контракта
+	contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
+	if err != nil {
+		return fmt.Errorf("ошибка создания экземпляра контракта: %v", err)
+	}
+
+	// 3. Настройка приватного ключа для подписания транзакций
+	privateKey, err := crypto.HexToECDSA(privateKeyAddr)
+	if err != nil {
+		return fmt.Errorf("ошибка загрузки приватного ключа: %v", err)
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return fmt.Errorf("некорректный тип публичного ключа")
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	// 4. Получение nonce для отправителя
+	nonce, err := client.PendingNonceAt(ctx, fromAddress)
+	if err != nil {
+		return fmt.Errorf("ошибка получения nonce: %v", err)
+	}
+
+	// 5. Получение текущей цены газа
+	gasPrice, err := client.SuggestGasPrice(ctx)
+	if err != nil {
+		return fmt.Errorf("ошибка получения цены газа: %v", err)
+	}
+
+	// 6. Создание авторизатора для транзакции
+	auth := bind.NewKeyedTransactor(privateKey)
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = uint64(3000000)
+	auth.GasPrice = gasPrice
+
+	// 7. Вызов функции mintCar
+	tx, err := contract.MintCar(auth, common.HexToAddress(toAddress), tokenId, metadataURI)
+	if err != nil {
+		return fmt.Errorf("ошибка выпуска токена: %v", err)
+	}
+
+	fmt.Printf("Транзакция отправлена! Хэш транзакции: %s\n", tx.Hash().Hex())
+	return nil
 }
 
 func (*NftEthereumWebAPI) GetNftInfo(ctx context.Context, tokenId *big.Int) (nft.NFT, error) {
