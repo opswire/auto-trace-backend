@@ -4,11 +4,13 @@ import (
 	"car-sell-buy-system/internal/ads-service/domain/ad"
 	"car-sell-buy-system/internal/ads-service/repository/psql/filter"
 	"car-sell-buy-system/internal/ads-service/repository/psql/sort"
+	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
 	"car-sell-buy-system/pkg/sqlutil"
 	"context"
 	"fmt"
 	"github.com/Masterminds/squirrel"
+	"time"
 )
 
 const (
@@ -18,11 +20,13 @@ const (
 
 type AdRepository struct {
 	*postgres.Postgres
+	logger logger.Interface
 }
 
-func NewAdRepository(pg *postgres.Postgres) *AdRepository {
+func NewAdRepository(pg *postgres.Postgres, logger logger.Interface) *AdRepository {
 	return &AdRepository{
 		pg,
+		logger,
 	}
 }
 
@@ -292,13 +296,16 @@ func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint6
 	if err != nil {
 		return nil, 0, fmt.Errorf("AdRepository - List - r.Builder: %w", err)
 	}
-	fmt.Println("sql: ", sql)
-	fmt.Println("args: ", args)
 
+	r.logger.Info(fmt.Sprintf("SQL Выполненного запроса: %s \nАргументы запроса: %s", sql, args))
+
+	tm := time.Now()
 	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("AdRepository - List - r.Pool.Query: %w", err)
 	}
+	diff := time.Now().Sub(tm).Milliseconds()
+	r.logger.Info(fmt.Sprintf("Затраченное время на запрос: %d мс", diff))
 
 	var ads []ad.Ad
 	var count uint64

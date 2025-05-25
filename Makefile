@@ -33,12 +33,23 @@ seed:
 
 .PHONY: test
 test: ### run test
-	go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/ads-service...
+	go test -v -race -covermode atomic -coverprofile=cover.out ./internal/ads-service...
 
-.PHONY: mock
-mock: ### run mockgen
+.PHONY: tool-test
+tool-test: ### run test
+	 go tool cover -html=./cover.out -o ./cover.html
+
+.PHONY: mock-ad
+mock-ad: ### run mockgen
 	mockgen -source ./internal/ads-service/domain/ad/service.go -package ad_test > ./internal/ads-service/domain/ad/mock_service_test.go
-	#mockgen -source ./internal/ads-service/usecase/contracts.go -package usecase_test > ./internal/ads-service/usecase/mocks_usecase_test.go
+
+.PHONY: mock-chat
+mock-chat: ### run mockgen
+	mockgen -source ./internal/ads-service/domain/chat/service.go -package chat_test > ./internal/ads-service/domain/chat/mock_service_test.go
+
+.PHONY: mock-payment
+mock-payment: ### run mockgen
+	mockgen -source ./internal/ads-service/domain/payment/service.go -package payment_test > ./internal/ads-service/domain/payment/mock_service_test.go
 
 # GRPC
 

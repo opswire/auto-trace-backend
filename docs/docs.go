@@ -931,13 +931,25 @@ const docTemplate = `{
                 "brand": {
                     "type": "string"
                 },
+                "category": {
+                    "type": "string"
+                },
                 "chat_exists": {
                     "type": "boolean"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
                 },
                 "description": {
+                    "type": "string"
+                },
+                "full_weight": {
+                    "type": "string"
+                },
+                "hp": {
                     "type": "string"
                 },
                 "id": {
@@ -961,7 +973,16 @@ const docTemplate = `{
                 "promotion": {
                     "$ref": "#/definitions/internal_ads-service_controller_http_v1_ad.Promotion"
                 },
+                "reg_number": {
+                    "type": "string"
+                },
+                "solo_weight": {
+                    "type": "string"
+                },
                 "title": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -1160,6 +1181,23 @@ const docTemplate = `{
                 }
             }
         },
+        "nft.Record": {
+            "type": "object",
+            "properties": {
+                "company": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "signature": {
+                    "type": "string"
+                }
+            }
+        },
         "nft.Response": {
             "type": "object",
             "properties": {
@@ -1209,44 +1247,20 @@ const docTemplate = `{
                 "contract_addr": {
                     "type": "string"
                 },
-                "token_id": {
-                    "type": "integer"
+                "records": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nft.Record"
+                    }
                 },
-                "token_metadata": {
-                    "$ref": "#/definitions/nft.TokenMetadataResponse"
+                "token_id": {
+                    "description": "TokenMetadata TokenMetadataResponse ` + "`" + `json:\"token_metadata\"` + "`" + `",
+                    "type": "integer"
                 },
                 "token_url": {
                     "type": "string"
                 },
                 "tx": {
-                    "type": "string"
-                }
-            }
-        },
-        "nft.TokenMetadataResponse": {
-            "type": "object",
-            "properties": {
-                "attributes": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "trait_type": {
-                                "type": "string"
-                            },
-                            "value": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
                     "type": "string"
                 }
             }
@@ -1350,10 +1364,10 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "http://localhost:8686",
+	Host:             "http://localhost:8989",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Nft Service API",
+	Title:            "Ads Service API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

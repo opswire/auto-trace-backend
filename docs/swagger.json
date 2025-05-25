@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Nft Service API",
+        "title": "Ads Service API",
         "contact": {},
         "license": {
             "name": "Apache 2.0",
@@ -9,7 +9,7 @@
         },
         "version": "1.0"
     },
-    "host": "http://localhost:8686",
+    "host": "http://localhost:8989",
     "basePath": "/api/v1",
     "paths": {
         "/api/v1/ads": {
@@ -924,13 +924,25 @@
                 "brand": {
                     "type": "string"
                 },
+                "category": {
+                    "type": "string"
+                },
                 "chat_exists": {
                     "type": "boolean"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
                 },
                 "description": {
+                    "type": "string"
+                },
+                "full_weight": {
+                    "type": "string"
+                },
+                "hp": {
                     "type": "string"
                 },
                 "id": {
@@ -954,7 +966,16 @@
                 "promotion": {
                     "$ref": "#/definitions/internal_ads-service_controller_http_v1_ad.Promotion"
                 },
+                "reg_number": {
+                    "type": "string"
+                },
+                "solo_weight": {
+                    "type": "string"
+                },
                 "title": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -1153,6 +1174,23 @@
                 }
             }
         },
+        "nft.Record": {
+            "type": "object",
+            "properties": {
+                "company": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "signature": {
+                    "type": "string"
+                }
+            }
+        },
         "nft.Response": {
             "type": "object",
             "properties": {
@@ -1202,44 +1240,20 @@
                 "contract_addr": {
                     "type": "string"
                 },
-                "token_id": {
-                    "type": "integer"
+                "records": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nft.Record"
+                    }
                 },
-                "token_metadata": {
-                    "$ref": "#/definitions/nft.TokenMetadataResponse"
+                "token_id": {
+                    "description": "TokenMetadata TokenMetadataResponse `json:\"token_metadata\"`",
+                    "type": "integer"
                 },
                 "token_url": {
                     "type": "string"
                 },
                 "tx": {
-                    "type": "string"
-                }
-            }
-        },
-        "nft.TokenMetadataResponse": {
-            "type": "object",
-            "properties": {
-                "attributes": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "trait_type": {
-                                "type": "string"
-                            },
-                            "value": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
                     "type": "string"
                 }
             }

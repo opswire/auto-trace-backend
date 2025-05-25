@@ -18,11 +18,19 @@ definitions:
     properties:
       brand:
         type: string
+      category:
+        type: string
       chat_exists:
         type: boolean
+      color:
+        type: string
       created_at:
         type: string
       description:
+        type: string
+      full_weight:
+        type: string
+      hp:
         type: string
       id:
         type: integer
@@ -38,7 +46,13 @@ definitions:
         type: number
       promotion:
         $ref: '#/definitions/internal_ads-service_controller_http_v1_ad.Promotion'
+      reg_number:
+        type: string
+      solo_weight:
+        type: string
       title:
+        type: string
+      type:
         type: string
       updated_at:
         type: string
@@ -167,6 +181,17 @@ definitions:
       token_url:
         type: string
     type: object
+  nft.Record:
+    properties:
+      company:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      signature:
+        type: string
+    type: object
   nft.Response:
     properties:
       created_at:
@@ -199,31 +224,16 @@ definitions:
         type: string
       contract_addr:
         type: string
+      records:
+        items:
+          $ref: '#/definitions/nft.Record'
+        type: array
       token_id:
+        description: TokenMetadata TokenMetadataResponse `json:"token_metadata"`
         type: integer
-      token_metadata:
-        $ref: '#/definitions/nft.TokenMetadataResponse'
       token_url:
         type: string
       tx:
-        type: string
-    type: object
-  nft.TokenMetadataResponse:
-    properties:
-      attributes:
-        items:
-          properties:
-            trait_type:
-              type: string
-            value:
-              type: string
-          type: object
-        type: array
-      description:
-        type: string
-      image:
-        type: string
-      name:
         type: string
     type: object
   pagination.ListRange:
@@ -287,13 +297,13 @@ definitions:
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: http://localhost:8686
+host: http://localhost:8989
 info:
   contact: {}
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Nft Service API
+  title: Ads Service API
   version: "1.0"
 paths:
   /api/v1/ads:

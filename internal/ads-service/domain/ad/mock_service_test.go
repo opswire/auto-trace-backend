@@ -12,12 +12,52 @@ package ad_test
 import (
 	ad "car-sell-buy-system/internal/ads-service/domain/ad"
 	nft "car-sell-buy-system/internal/ads-service/domain/nft"
+	local "car-sell-buy-system/pkg/storage/local"
 	context "context"
 	big "math/big"
 	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
 )
+
+// MockStorage is a mock of Storage interface.
+type MockStorage struct {
+	ctrl     *gomock.Controller
+	recorder *MockStorageMockRecorder
+	isgomock struct{}
+}
+
+// MockStorageMockRecorder is the mock recorder for MockStorage.
+type MockStorageMockRecorder struct {
+	mock *MockStorage
+}
+
+// NewMockStorage creates a new mock instance.
+func NewMockStorage(ctrl *gomock.Controller) *MockStorage {
+	mock := &MockStorage{ctrl: ctrl}
+	mock.recorder = &MockStorageMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockStorage) EXPECT() *MockStorageMockRecorder {
+	return m.recorder
+}
+
+// Save mocks base method.
+func (m *MockStorage) Save(file *local.UploadedFile) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", file)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockStorageMockRecorder) Save(file any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockStorage)(nil).Save), file)
+}
 
 // MockNftRepository is a mock of NftRepository interface.
 type MockNftRepository struct {
@@ -82,6 +122,20 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Delete mocks base method.
+func (m *MockRepository) Delete(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, id)
+}
+
 // GetById mocks base method.
 func (m *MockRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 	m.ctrl.T.Helper()
@@ -140,4 +194,18 @@ func (m *MockRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, err
 func (mr *MockRepositoryMockRecorder) Store(ctx, dto any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockRepository)(nil).Store), ctx, dto)
+}
+
+// Update mocks base method.
+func (m *MockRepository) Update(ctx context.Context, id int64, dto ad.UpdateDTO) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, id, dto)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockRepositoryMockRecorder) Update(ctx, id, dto any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRepository)(nil).Update), ctx, id, dto)
 }

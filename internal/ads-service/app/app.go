@@ -37,7 +37,7 @@ func Run(cfg *config.Config) {
 
 	// Services
 	adService := ad.NewService(
-		psql.NewAdRepository(pg),
+		psql.NewAdRepository(pg, l),
 		webapi.NewNftEthereumWebAPI(),
 		local.NewFileStorage("./storage"),
 	)

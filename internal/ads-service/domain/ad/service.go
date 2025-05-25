@@ -78,7 +78,6 @@ func (s *Service) Update(ctx context.Context, id int64, dto UpdateDTO) error {
 		dto.CurrentImageUrl = path
 	}
 
-	//return fmt.Errorf("ERROR!")
 	if err := s.repository.Update(ctx, id, dto); err != nil {
 		return err
 	}
