@@ -31,7 +31,7 @@ func Run(cfg *config.Config) {
 	defer pg.Pool.Close()
 
 	// Use cases
-	userUseCase := usecase.NewUserUseCase(repo.NewUserRepo(pg))
+	userUseCase := usecase.NewUserUseCase(repo.NewUserRepo(pg, l))
 
 	// grpc
 	grpcServer := grpc.NewServer()

@@ -1,0 +1,68 @@
+version: '3.8'
+
+networks:
+  backend_net:
+    driver: bridge
+
+volumes:
+  pg_data:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./docker/prod/pg-backup:/backups
+    networks:
+      - backend_net
+
+  ads:
+    build:
+      context: .
+      dockerfile: ./docker/prod/ads.prod.Dockerfile
+    environment:
+      PG_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?sslmode=disable
+    networks:
+      - backend_net
+    ports:
+      - "8989:80"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+
+  sso:
+    build:
+      context: .
+      dockerfile: ./docker/prod/sso.prod.Dockerfile
+    environment:
+      PG_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?sslmode=disable
+    networks:
+      - backend_net
+    ports:
+      - "50051:50051"
+      - "8787:80"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+
+  nfts:
+    build:
+      context: .
+      dockerfile: ./docker/prod/nft.prod.Dockerfile
+    environment:
+      PG_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?sslmode=disable
+    networks:
+      - backend_net
+    ports:
+      - "8686:80"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres

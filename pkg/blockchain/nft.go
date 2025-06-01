@@ -26,20 +26,17 @@ const (
 
 func main() {
 	fmt.Println(GetNftInfo(big.NewInt(5552)))
-	return
-	// Подключение к сети
+
 	client, err := ethclient.Dial(rpcURL)
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}
 
-	// Загрузка приватного ключа
 	privateKeyECDSA, err := crypto.HexToECDSA(privateKey[2:])
 	if err != nil {
 		log.Fatalf("Failed to load private key: %v", err)
 	}
 
-	// Получение публичного адреса
 	publicKey := privateKeyECDSA.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
@@ -47,37 +44,31 @@ func main() {
 	}
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 
-	// Получение nonce
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
 		log.Fatalf("Failed to get nonce: %v", err)
 	}
 
-	// Установка газа и цены газа
 	gasPrice, err := client.SuggestGasPrice(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 
-	// Настройка транзакции
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKeyECDSA, big.NewInt(chainId))
 	if err != nil {
 		log.Fatalf("Failed to create transactor: %v", err)
 	}
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0) // Нет оплаты в ETH
+	auth.Value = big.NewInt(0)
 
-	// Установите цену газа ниже текущей средней
 	gasPrice = gasPrice.Div(gasPrice, big.NewInt(2))
 	auth.GasPrice = gasPrice
 
-	// Подключение к контракту
 	contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
 	if err != nil {
 		log.Fatalf("Failed to load contract: %v", err)
 	}
 
-	// Параметры вызова mintNFT
 	toAddress := common.HexToAddress("0xbe012aE4Ab6BdC891884fb5a7763A5F7dbC26eef")                                    // Получатель токена
 	tokenId := big.NewInt(1)                                                                                          // Уникальный ID токена
 	tokenURI := "https://ivory-total-catshark-439.mypinata.cloud/ipfs/QmdjzwyKPUv7EhW38ywuJKP25or6TkNdmBGodazoUArQNM" // URI метаданных токена
@@ -106,7 +97,6 @@ func GetNftInfo(tokenId *big.Int) TokenMetadata {
 		log.Fatalf("Ошибка подключения к Ethereum: %v", err)
 	}
 
-	// Получаем URI токена
 	contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
 	if err != nil {
 		log.Fatalf("Ошибка создания экземпляра контракта: %v", err)
@@ -117,7 +107,6 @@ func GetNftInfo(tokenId *big.Int) TokenMetadata {
 		log.Fatalf("Ошибка получения URI токена: %v", err)
 	}
 
-	// Загружаем метаданные из URI
 	resp, err := http.Get(uri)
 	if err != nil {
 		log.Fatalf("Ошибка загрузки метаданных: %v", err)

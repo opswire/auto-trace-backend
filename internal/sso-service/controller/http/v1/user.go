@@ -29,13 +29,12 @@ func newAdRoutes(handler *gin.RouterGroup, l logger.Interface, uc usecase.User) 
 		h.Use(middleware.RequiredAuthMiddleware())
 		h.GET("/profile", r.getProfile)
 	}
-
-	// protected
 }
 
 type registerRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Name     string `json:"name" binding:"required"`
 }
 
 func (a *userRoutes) register(c *gin.Context) {
@@ -51,6 +50,7 @@ func (a *userRoutes) register(c *gin.Context) {
 		entity.User{
 			Email:    request.Email,
 			Password: request.Password,
+			Name:     request.Name,
 		},
 	)
 	if err != nil {

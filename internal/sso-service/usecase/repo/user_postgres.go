@@ -2,6 +2,7 @@ package repo
 
 import (
 	"car-sell-buy-system/internal/sso-service/entity"
+	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
 	"context"
 	"errors"
@@ -13,10 +14,11 @@ import (
 
 type UserRepo struct {
 	*postgres.Postgres
+	logger *logger.Logger
 }
 
-func NewUserRepo(pg *postgres.Postgres) *UserRepo {
-	return &UserRepo{pg}
+func NewUserRepo(pg *postgres.Postgres, l *logger.Logger) *UserRepo {
+	return &UserRepo{pg, l}
 }
 
 func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
@@ -53,13 +55,16 @@ func (r *UserRepo) Store(ctx context.Context, user entity.User) (entity.User, er
 
 	sql, args, err := r.Builder.
 		Insert("users").
-		Columns("email", "password").
-		Values(user.Email, password).
+		Columns("email", "password", "name").
+		Values(user.Email, password, user.Name).
 		Suffix("RETURNING id").
 		ToSql()
 	if err != nil {
 		return entity.User{}, fmt.Errorf("UserRepo - Store - r.Builder: %w", err)
 	}
+
+	r.logger.Info(fmt.Sprintf("sql: %s", sql))
+	r.logger.Info(fmt.Sprintf("args: %s", args))
 
 	row := r.Pool.QueryRow(ctx, sql, args...)
 
