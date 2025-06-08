@@ -13,6 +13,8 @@ type (
 		Log     Log  `yaml:"logger"`
 		Pg      PG   `yaml:"postgres"`
 		Yokassa Yokassa
+		Kafka   Kafka
+		Smtp    Smtp
 	}
 
 	// App -.
@@ -44,6 +46,17 @@ type (
 		Username                  string `env:"YOKASSA_USERNAME"`
 		Password                  string `env:"YOKASSA_PASSWORD"`
 		WebhookAllowedIpAddresses string `env:"YOKASSA_WEBHOOK_WHITELIST"`
+	}
+
+	Kafka struct {
+		Dsn           string `env:"KAFKA_DSN"`
+		PaymentsTopic string `env:"KAFKA_PAYMENTS_TOPIC"`
+	}
+
+	Smtp struct {
+		Host string `env:"SMTP_HOST"`
+		Port string `env:"SMTP_PORT"`
+		From string `env:"SMTP_FROM_EMAIL"`
 	}
 )
 

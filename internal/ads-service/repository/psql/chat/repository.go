@@ -35,12 +35,14 @@ func (r *Repository) StoreMessage(ctx context.Context, chatId int64, dto chat.St
 			"sender_id",
 			"text",
 			"is_read",
+			"image_url",
 		).
 		Values(
 			chatId,
 			userId,
 			dto.Text,
 			false,
+			dto.CurrentImageUrl,
 		).
 		Suffix("RETURNING id").
 		ToSql()
@@ -118,8 +120,14 @@ func (r *Repository) ListChats(ctx context.Context) ([]chat.Chat, int64, error) 
 			sqlutil.TableColumn(chatTableName, "seller_id"),
 			sqlutil.TableColumn(chatTableName, "ad_id"),
 			sqlutil.TableColumn(chatTableName, "created_at"),
+			"ads.title",
+			"buyers.name",
+			"sellers.name",
 		).
 		From(chatTableName).
+		InnerJoin("ads on ads.id = chats.ad_id").
+		InnerJoin("users as buyers on buyers.id = chats.buyer_id").
+		InnerJoin("users as sellers on sellers.id = chats.seller_id").
 		Where(squirrel.Or{
 			squirrel.Eq{sqlutil.TableColumn(chatTableName, "buyer_id"): userId},
 			squirrel.Eq{sqlutil.TableColumn(chatTableName, "seller_id"): userId},
@@ -148,6 +156,9 @@ func (r *Repository) ListChats(ctx context.Context) ([]chat.Chat, int64, error) 
 			&msg.SellerId,
 			&msg.AdId,
 			&msg.CreatedAt,
+			&msg.AdTitle,
+			&msg.BuyerName,
+			&msg.SellerName,
 		)
 		if err != nil {
 			return nil, 0, fmt.Errorf("chat - Repository - List - rows.Scan: %w", err)
@@ -171,6 +182,7 @@ func (r *Repository) ListMessagesByChatId(ctx context.Context, chatId int64) ([]
 			sqlutil.TableColumn(messageTableName, "text"),
 			sqlutil.TableColumn(messageTableName, "is_read"),
 			sqlutil.TableColumn(messageTableName, "created_at"),
+			sqlutil.TableColumn(messageTableName, "image_url"),
 		).
 		Column(squirrel.Alias(squirrel.Case().When(squirrel.Expr("messages.sender_id = ?", userId), "true").Else("false"), "mine")).
 		From(messageTableName).
@@ -201,10 +213,11 @@ func (r *Repository) ListMessagesByChatId(ctx context.Context, chatId int64) ([]
 			&msg.Text,
 			&msg.IsRead,
 			&msg.CreatedAt,
+			&msg.ImageUrl,
 			&msg.Mine,
 		)
 		if err != nil {
-			return nil, 0, fmt.Errorf("AdRepository - List - rows.Scan: %w", err)
+			return nil, 0, fmt.Errorf("ChatRepository - List - rows.Scan: %w", err)
 		}
 		messages = append(messages, msg)
 		count++

@@ -67,6 +67,42 @@ definitions:
     type: object
   ad.UpdateRequest:
     type: object
+  appointment.Response:
+    properties:
+      ad_id:
+        type: integer
+      buyer_id:
+        type: integer
+      duration:
+        type: integer
+      id:
+        type: integer
+      is_confirmed:
+        type: boolean
+      is_success:
+        type: boolean
+      location:
+        type: string
+      seller_id:
+        type: integer
+      start:
+        type: string
+    type: object
+  appointment.StoreAppointmentRequest:
+    properties:
+      ad_id:
+        type: integer
+      buyer_id:
+        type: integer
+      duration:
+        type: integer
+      location:
+        type: string
+      seller_id:
+        type: integer
+      start:
+        type: string
+    type: object
   chat.ChatResponse:
     properties:
       ad_id:
@@ -524,6 +560,43 @@ paths:
       summary: Update advertisement
       tags:
       - Ads
+  /api/v1/appointments:
+    post:
+      consumes:
+      - application/json
+      description: Create new appointment
+      parameters:
+      - description: Appointment data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/appointment.StoreAppointmentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/appointment.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new appointment
+      tags:
+      - Appointments
   /api/v1/chats:
     get:
       consumes:

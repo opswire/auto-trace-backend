@@ -8,6 +8,7 @@ type User struct {
 	Password string `json:"password"`
 	Role     string `json:"role"`
 	Name     string `json:"name"`
+	IsActive bool   `json:"is_active"`
 }
 
 func (u *User) ComparePasswords(password string) error {

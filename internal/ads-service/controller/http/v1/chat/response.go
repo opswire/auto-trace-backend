@@ -6,20 +6,28 @@ import (
 )
 
 type ChatResponse struct {
-	Id        int64     `json:"id"`
-	BuyerId   int64     `json:"buyer_id"`
-	SellerId  int64     `json:"seller_id"`
-	AdId      int64     `json:"ad_id"`
-	CreatedAt time.Time `json:"created_at"`
+	Id         int64     `json:"id"`
+	BuyerId    int64     `json:"buyer_id"`
+	SellerId   int64     `json:"seller_id"`
+	AdId       int64     `json:"ad_id"`
+	CreatedAt  time.Time `json:"created_at"`
+	AdTitle    string    `json:"ad_title"`
+	BuyerName  string    `json:"buyer_name"`
+	SellerName string    `json:"seller_name"`
+	IsBuyer    bool      `json:"is_buyer"`
 }
 
 func newChatResponse(chat chat.Chat) ChatResponse {
 	return ChatResponse{
-		Id:        chat.Id,
-		BuyerId:   chat.BuyerId,
-		SellerId:  chat.SellerId,
-		AdId:      chat.AdId,
-		CreatedAt: chat.CreatedAt,
+		Id:         chat.Id,
+		BuyerId:    chat.BuyerId,
+		SellerId:   chat.SellerId,
+		AdId:       chat.AdId,
+		CreatedAt:  chat.CreatedAt,
+		AdTitle:    chat.AdTitle,
+		BuyerName:  chat.BuyerName,
+		SellerName: chat.SellerName,
+		IsBuyer:    chat.IsBuyer,
 	}
 }
 
@@ -47,6 +55,7 @@ type MessageResponse struct {
 	IsRead    bool      `json:"is_read"`
 	CreatedAt time.Time `json:"created_at"`
 	Mine      bool      `json:"mine"`
+	ImageUrl  string    `json:"image_url"`
 }
 
 func newMessageResponse(message chat.Message) MessageResponse {
@@ -58,6 +67,7 @@ func newMessageResponse(message chat.Message) MessageResponse {
 		IsRead:    message.IsRead,
 		CreatedAt: message.CreatedAt,
 		Mine:      message.Mine,
+		ImageUrl:  message.ImageUrl,
 	}
 }
 

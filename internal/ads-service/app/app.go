@@ -5,13 +5,8 @@ import (
 	"car-sell-buy-system/internal/ads-service/controller/http"
 	"car-sell-buy-system/internal/ads-service/domain/ad"
 	"car-sell-buy-system/internal/ads-service/domain/chat"
-	"car-sell-buy-system/internal/ads-service/domain/payment"
 	"car-sell-buy-system/internal/ads-service/repository/psql"
 	chatpsql "car-sell-buy-system/internal/ads-service/repository/psql/chat"
-	paymentpsql "car-sell-buy-system/internal/ads-service/repository/psql/payment"
-	"car-sell-buy-system/internal/ads-service/repository/psql/tariff"
-	"car-sell-buy-system/internal/ads-service/repository/webapi"
-	"car-sell-buy-system/internal/ads-service/repository/yookassa"
 	"car-sell-buy-system/pkg/httpserver"
 	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
@@ -38,14 +33,12 @@ func Run(cfg *config.Config) {
 	// Services
 	adService := ad.NewService(
 		psql.NewAdRepository(pg, l),
-		webapi.NewNftEthereumWebAPI(),
 		local.NewFileStorage("./storage"),
 	)
-	paymentService := payment.NewService(paymentpsql.NewRepository(pg), tariff.NewRepository(pg), yookassa.NewRepository(l))
-	chatService := chat.NewService(chatpsql.NewRepository(pg))
+	chatService := chat.NewService(chatpsql.NewRepository(pg), local.NewFileStorage("./storage"))
 
 	handler := gin.New()
-	http.NewRouter(handler, l, cfg, adService, paymentService, chatService)
+	http.NewRouter(handler, l, cfg, adService, chatService)
 	httpServ := httpserver.New(handler, httpserver.WithPort(cfg.Http.Port))
 
 	interrupt := make(chan os.Signal, 1)

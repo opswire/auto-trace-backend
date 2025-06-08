@@ -4,6 +4,8 @@ import (
 	"car-sell-buy-system/internal/sso-service/entity"
 	"context"
 	"errors"
+	"fmt"
+	"strconv"
 )
 
 type UserUseCase struct {
@@ -41,4 +43,50 @@ func (uc *UserUseCase) Register(ctx context.Context, user entity.User) (entity.U
 	}
 
 	return storedUser, nil
+}
+
+func (uc *UserUseCase) List(ctx context.Context) ([]*entity.User, error) {
+	id, err := strconv.Atoi(ctx.Value("userId").(string))
+	if err != nil {
+		return nil, err
+	}
+
+	currentUser, err := uc.repo.GetById(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	if currentUser.Role != "admin" {
+		return nil, fmt.Errorf("Пользователь не имеет доступа!")
+	}
+
+	users, err := uc.repo.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (uc *UserUseCase) HandleActive(ctx context.Context, userId int64) error {
+	id, err := strconv.Atoi(ctx.Value("userId").(string))
+	if err != nil {
+		return err
+	}
+
+	currentUser, err := uc.repo.GetById(ctx, int64(id))
+	if err != nil {
+		return err
+	}
+
+	if currentUser.Role != "admin" {
+		return fmt.Errorf("Пользователь не имеет доступа!")
+	}
+
+	err = uc.repo.HandleActive(ctx, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

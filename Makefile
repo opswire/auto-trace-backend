@@ -28,6 +28,9 @@ migrate-up:
 migrate-down:
 	go run ./cmd/command/root.go migrate-down
 
+test-message:
+	go run ./cmd/command/root.go test-message
+
 seed:
 	go run ./cmd/ads/seed/seeder.go
 

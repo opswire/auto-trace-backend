@@ -7,14 +7,21 @@ import (
 )
 
 type StoreRequest struct {
-	Title         string                `form:"title"`
-	Description   string                `form:"description"`
-	Price         float64               `form:"price"`
-	Vin           string                `form:"vin"`
-	Brand         string                `form:"brand"`
-	Model         string                `form:"model"`
+	Title         string                `form:"title" binding:"required"`
+	Description   string                `form:"description" binding:"required"`
+	Price         float64               `form:"price" binding:"required"`
+	Vin           string                `form:"vin" binding:"required"`
+	Brand         string                `form:"brand" binding:"required"`
+	Model         string                `form:"model" binding:"required"`
 	YearOfRelease int64                 `form:"year_of_release"`
 	Image         *multipart.FileHeader `form:"image" binding:"required"`
+	Category      string                `form:"category" binding:"required"`
+	RegNumber     string                `form:"reg_number" binding:"required"`
+	Type          string                `form:"type" binding:"required"`
+	Color         string                `form:"color" binding:"required"`
+	Hp            string                `form:"hp" binding:"required"`
+	FullWeight    string                `form:"full_weight" binding:"required"`
+	SoloWeight    string                `form:"solo_weight" binding:"required"`
 }
 
 func (r StoreRequest) ToDTO() (ad.StoreDTO, error) {
@@ -35,6 +42,13 @@ func (r StoreRequest) ToDTO() (ad.StoreDTO, error) {
 		Model:         r.Model,
 		YearOfRelease: r.YearOfRelease,
 		Image:         image,
+		Category:      r.Category,
+		RegNumber:     r.RegNumber,
+		Type:          r.Type,
+		Color:         r.Color,
+		Hp:            r.Hp,
+		FullWeight:    r.FullWeight,
+		SoloWeight:    r.SoloWeight,
 	}, nil
 }
 
@@ -48,6 +62,13 @@ type UpdateRequest struct {
 	YearOfRelease   int64                 `form:"year_of_release" binding:"required"`
 	Image           *multipart.FileHeader `form:"image"`
 	CurrentImageUrl string                `form:"image_url" binding:"required"`
+	Category        string                `form:"category" binding:"required"`
+	RegNumber       string                `form:"reg_number" binding:"required"`
+	Type            string                `form:"type" binding:"required"`
+	Color           string                `form:"color" binding:"required"`
+	Hp              string                `form:"hp" binding:"required"`
+	FullWeight      string                `form:"full_weight" binding:"required"`
+	SoloWeight      string                `form:"solo_weight" binding:"required"`
 }
 
 func (r UpdateRequest) ToDTO() (ad.UpdateDTO, error) {
@@ -70,6 +91,13 @@ func (r UpdateRequest) ToDTO() (ad.UpdateDTO, error) {
 		YearOfRelease:   r.YearOfRelease,
 		Image:           image,
 		CurrentImageUrl: r.CurrentImageUrl,
+		Category:        r.Category,
+		RegNumber:       r.RegNumber,
+		Type:            r.Type,
+		Color:           r.Color,
+		Hp:              r.Hp,
+		FullWeight:      r.FullWeight,
+		SoloWeight:      r.SoloWeight,
 	}, nil
 }
 

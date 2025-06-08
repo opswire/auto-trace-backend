@@ -136,19 +136,19 @@ func (mr *MockRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, id)
 }
 
-// GetById mocks base method.
+// GetByTransactionId mocks base method.
 func (m *MockRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetById", ctx, id)
+	ret := m.ctrl.Call(m, "GetByTransactionId", ctx, id)
 	ret0, _ := ret[0].(ad.Ad)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetById indicates an expected call of GetById.
+// GetByTransactionId indicates an expected call of GetByTransactionId.
 func (mr *MockRepositoryMockRecorder) GetById(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockRepository)(nil).GetById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByTransactionId", reflect.TypeOf((*MockRepository)(nil).GetById), ctx, id)
 }
 
 // HandleFavorite mocks base method.

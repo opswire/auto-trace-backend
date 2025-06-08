@@ -1,0 +1,3059 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>app: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">car-sell-buy-system/internal/ads-service/app/app.go (0.0%)</option>
+				
+				<option value="file1">car-sell-buy-system/internal/ads-service/controller/http/router.go (0.0%)</option>
+				
+				<option value="file2">car-sell-buy-system/internal/ads-service/controller/http/v1/ad/ad.go (0.0%)</option>
+				
+				<option value="file3">car-sell-buy-system/internal/ads-service/controller/http/v1/ad/request.go (0.0%)</option>
+				
+				<option value="file4">car-sell-buy-system/internal/ads-service/controller/http/v1/ad/response.go (0.0%)</option>
+				
+				<option value="file5">car-sell-buy-system/internal/ads-service/controller/http/v1/chat/controller.go (0.0%)</option>
+				
+				<option value="file6">car-sell-buy-system/internal/ads-service/controller/http/v1/chat/request.go (0.0%)</option>
+				
+				<option value="file7">car-sell-buy-system/internal/ads-service/controller/http/v1/chat/response.go (0.0%)</option>
+				
+				<option value="file8">car-sell-buy-system/internal/ads-service/controller/http/v1/payment/payment.go (0.0%)</option>
+				
+				<option value="file9">car-sell-buy-system/internal/ads-service/controller/http/v1/payment/request.go (0.0%)</option>
+				
+				<option value="file10">car-sell-buy-system/internal/ads-service/controller/http/v1/payment/response.go (0.0%)</option>
+				
+				<option value="file11">car-sell-buy-system/internal/ads-service/controller/http/v1/v1.go (0.0%)</option>
+				
+				<option value="file12">car-sell-buy-system/internal/ads-service/domain/ad/service.go (97.3%)</option>
+				
+				<option value="file13">car-sell-buy-system/internal/ads-service/domain/chat/service.go (100.0%)</option>
+				
+				<option value="file14">car-sell-buy-system/internal/ads-service/domain/payment/service.go (95.2%)</option>
+				
+				<option value="file15">car-sell-buy-system/internal/ads-service/middleware/auth.go (0.0%)</option>
+				
+				<option value="file16">car-sell-buy-system/internal/ads-service/middleware/metrics.go (0.0%)</option>
+				
+				<option value="file17">car-sell-buy-system/internal/ads-service/middleware/yokassa/auth.go (0.0%)</option>
+				
+				<option value="file18">car-sell-buy-system/internal/ads-service/repository/psql/ad_postgres.go (0.0%)</option>
+				
+				<option value="file19">car-sell-buy-system/internal/ads-service/repository/psql/chat/repository.go (0.0%)</option>
+				
+				<option value="file20">car-sell-buy-system/internal/ads-service/repository/psql/filter/ad.go (0.0%)</option>
+				
+				<option value="file21">car-sell-buy-system/internal/ads-service/repository/psql/payment/payment.go (0.0%)</option>
+				
+				<option value="file22">car-sell-buy-system/internal/ads-service/repository/psql/sort/ad.go (0.0%)</option>
+				
+				<option value="file23">car-sell-buy-system/internal/ads-service/repository/psql/tariff/tariff.go (0.0%)</option>
+				
+				<option value="file24">car-sell-buy-system/internal/ads-service/repository/webapi/ntf_ethereum.go (0.0%)</option>
+				
+				<option value="file25">car-sell-buy-system/internal/ads-service/repository/yookassa/api.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package app
+
+import (
+        "car-sell-buy-system/config"
+        "car-sell-buy-system/internal/ads-service/controller/http"
+        "car-sell-buy-system/internal/ads-service/domain/ad"
+        "car-sell-buy-system/internal/ads-service/domain/chat"
+        "car-sell-buy-system/internal/ads-service/domain/payment"
+        "car-sell-buy-system/internal/ads-service/repository/psql"
+        chatpsql "car-sell-buy-system/internal/ads-service/repository/psql/chat"
+        paymentpsql "car-sell-buy-system/internal/ads-service/repository/psql/payment"
+        "car-sell-buy-system/internal/ads-service/repository/psql/tariff"
+        "car-sell-buy-system/internal/ads-service/repository/webapi"
+        "car-sell-buy-system/internal/ads-service/repository/yookassa"
+        "car-sell-buy-system/pkg/httpserver"
+        "car-sell-buy-system/pkg/logger"
+        "car-sell-buy-system/pkg/postgres"
+        "car-sell-buy-system/pkg/storage/local"
+        "fmt"
+        "github.com/gin-gonic/gin"
+        "log"
+        "os"
+        "os/signal"
+        "syscall"
+)
+
+func Run(cfg *config.Config) <span class="cov0" title="0">{
+        // Logger
+        l := logger.New("debug")
+
+        // Postgres
+        pg, err := postgres.New(cfg.Pg.URL)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal("Failed to connect DB.", err)
+        }</span>
+        <span class="cov0" title="0">defer pg.Pool.Close()
+
+        // Services
+        adService := ad.NewService(
+                psql.NewAdRepository(pg, l),
+                webapi.NewNftEthereumWebAPI(),
+                local.NewFileStorage("./storage"),
+        )
+        paymentService := payment.NewService(paymentpsql.NewRepository(pg), tariff.NewRepository(pg), yookassa.NewRepository(l))
+        chatService := chat.NewService(chatpsql.NewRepository(pg))
+
+        handler := gin.New()
+        http.NewRouter(handler, l, cfg, adService, paymentService, chatService)
+        httpServ := httpserver.New(handler, httpserver.WithPort(cfg.Http.Port))
+
+        interrupt := make(chan os.Signal, 1)
+        signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+        select </span>{
+        case s := &lt;-interrupt:<span class="cov0" title="0">
+                l.Info("ads - Run - signal: " + s.String())</span>
+        case err = &lt;-httpServ.Notify():<span class="cov0" title="0">
+                l.Error(fmt.Errorf("ads - Run - httpServer.Notify: %w", err))</span>
+        }
+
+        <span class="cov0" title="0">err = httpServ.Shutdown()
+        if err != nil </span><span class="cov0" title="0">{
+                l.Error(fmt.Errorf("ads - Run - httpServer.Shutdown: %w", err))
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package http
+
+import (
+        "car-sell-buy-system/config"
+        _ "car-sell-buy-system/docs" // Swagger docs.
+        v1 "car-sell-buy-system/internal/ads-service/controller/http/v1"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/chat"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/payment"
+        "car-sell-buy-system/pkg/logger"
+        "github.com/gin-gonic/gin"
+        "github.com/prometheus/client_golang/prometheus"
+        "github.com/prometheus/client_golang/prometheus/promhttp"
+        swaggerFiles "github.com/swaggo/files"
+        ginSwagger "github.com/swaggo/gin-swagger"
+)
+
+// NewRouter - 1
+//
+//        @title                                                Ads Service API
+//        @version                                        1.0
+//        @license.name                                Apache 2.0
+//        @license.url                                http://www.apache.org/licenses/LICENSE-2.0.html
+//        @host                                                http://localhost:8989
+//        @BasePath                                        /api/v1
+//
+//        @externalDocs.description        OpenAPI
+//        @externalDocs.url                        https://swagger.io/resources/open-api/
+func NewRouter(
+        handler *gin.Engine,
+        logger logger.Interface,
+        config *config.Config,
+        adService ad.Service,
+        paymentService payment.Service,
+        chatService chat.Service,
+) <span class="cov0" title="0">{
+        // Options.
+        handler.Use(gin.Logger())
+        handler.Use(gin.Recovery())
+        handler.Use(CORSMiddleware())
+
+        handler.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+        metric := prometheus.NewCounterVec(
+                prometheus.CounterOpts{
+                        Name: "my_custom_metric",
+                        Help: "",
+                },
+                []string{"total_requests"},
+        )
+        prometheus.MustRegister(metric)
+
+        handler.Static("/storage", "./storage")
+
+        h := handler.Group("/api")
+        </span><span class="cov0" title="0">{
+                v1.NewController(
+                        adService,
+                        paymentService,
+                        chatService,
+                        logger,
+                        config,
+                ).InitAPI(h)
+        }</span>
+
+        <span class="cov0" title="0">handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))</span>
+}
+
+func CORSMiddleware() gin.HandlerFunc <span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov0" title="0">{
+                c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+                c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+                c.Writer.Header().Set("Access-Control-Allow-Headers",
+                        "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
+                c.Writer.Header().Set("Access-Control-Allow-Methods",
+                        "POST, OPTIONS, GET, PUT, DELETE, PATCH")
+
+                if c.Request.Method == "OPTIONS" </span><span class="cov0" title="0">{
+                        c.AbortWithStatus(204)
+                        return
+                }</span>
+
+                <span class="cov0" title="0">c.Next()</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package ad
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/ad"
+        "car-sell-buy-system/internal/ads-service/domain/nft"
+        "car-sell-buy-system/internal/ads-service/middleware"
+        "car-sell-buy-system/pkg/handler"
+        "car-sell-buy-system/pkg/logger"
+        "context"
+        "github.com/gin-gonic/gin"
+        "net/http"
+)
+
+type Service interface {
+        List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint64, error)
+        GetById(ctx context.Context, id int64) (ad.Ad, error)
+        Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error)
+        Update(ctx context.Context, id int64, dto ad.UpdateDTO) error
+        Delete(ctx context.Context, id int64) error
+        HandleFavorite(ctx context.Context, adId, userId int64) error
+        GetTokenInfo(ctx context.Context, tokenId int64) (nft.NFT, error)
+}
+
+type Controller struct {
+        handler *handler.BaseHandler
+        service Service
+}
+
+func NewController(l logger.Interface, service Service) *Controller <span class="cov0" title="0">{
+        return &amp;Controller{
+                handler.NewBaseHandler(l),
+                service,
+        }
+}</span>
+
+func (ctrl *Controller) InitAPI(router *gin.RouterGroup) <span class="cov0" title="0">{
+        h := router.Group("/ads")
+        </span><span class="cov0" title="0">{
+                h.Use(middleware.OptionalAuthMiddleware(ctrl.handler.Logger))
+                h.GET("", ctrl.list)
+                h.GET("/:adId", ctrl.getById)
+                h.POST("", ctrl.store)
+                h.GET("/:adId/nftInfo", ctrl.getNftInfo)
+
+                // Protected
+                h.Use(middleware.RequiredAuthMiddleware(ctrl.handler.Logger))
+                h.POST("/favorite", ctrl.handleFavorite)
+                h.PATCH("/:adId", ctrl.update)
+                h.DELETE("/:adId", ctrl.delete)
+        }</span>
+}
+
+// getById godoc
+//
+//        @Summary                Get advertisement by ID
+//        @Description        Get car advertisement details
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Param                        id        path                int        true        "Ad ID"
+//        @Success                200        {object}        handler.BasicResponseDTO
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                500        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{id} [get]
+func (ctrl *Controller) getById(c *gin.Context) <span class="cov0" title="0">{
+        adId, err := ctrl.handler.ParseIDFromPath(c, "adId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad not found. Invalid id")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        adv, err := ctrl.service.GetById(ctx, adId)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad not found. Internal error.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newResponse(adv),
+        })</span>
+}
+
+// Store Ad
+//
+//        @Summary                Create new advertisement
+//        @Description        Create new car advertisement
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                StoreRequest        true        "Ad data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=ad.Response}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads [post]
+func (ctrl *Controller) store(c *gin.Context) <span class="cov0" title="0">{
+        var request StoreRequest
+        if err := c.ShouldBind(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad store error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">dto, err := request.ToDTO()
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "file processing failed"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">adv, err := ctrl.service.Store(
+                c.Request.Context(),
+                dto,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad store error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("Ad with ID %d created successfully!", adv.Id)
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newResponse(adv),
+        })</span>
+}
+
+// Update Ad
+//
+//        @Summary                Update advertisement
+//        @Description        Update car advertisement
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                UpdateRequest        true        "Ad data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=string}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{id} [patch]
+func (ctrl *Controller) update(c *gin.Context) <span class="cov0" title="0">{
+        var request UpdateRequest
+        if err := c.ShouldBind(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad update error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">id, err := ctrl.handler.ParseIDFromPath(c, "adId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Invalid path id.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("request: %s", request)
+
+        dto, err := request.ToDTO()
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Failed to create DTO.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">err = ctrl.service.Update(
+                c.Request.Context(),
+                id,
+                dto,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("Ad with ID %d updated successfully!", id)
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   "success",
+        })</span>
+}
+
+// List Ads
+//
+//        @Summary                Get ads list
+//        @Description        Get paginated and filtered list of ads
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Param                        page        query                int                false        "Page number"                default(1)
+//        @Param                        limit        query                int                false        "Items per page"        default(10)
+//        @Param                        filter        query                string        false        "Filter criteria (key=value)"
+//        @Param                        sort        query                string        false        "Sort field and direction (field=asc|desc)"
+//        @Success                200                {object}        handler.BasicResponseDTO{data=ad.ListResponse}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                404                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads [get]
+func (ctrl *Controller) list(c *gin.Context) <span class="cov0" title="0">{
+        paginationParams, err := ctrl.handler.ParsePaginationParams(c)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Pagination params is not valid.")
+        }</span>
+
+        <span class="cov0" title="0">dto := ad.ListDTO{
+                Filter:     c.QueryMap("filter"),
+                Sort:       c.QueryMap("sort"),
+                Pagination: paginationParams,
+        }
+
+        userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        ads, count, err := ctrl.service.List(ctx, dto)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ads not found.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newListResponse(ads, paginationParams, count),
+        })</span>
+}
+
+// Delete Ad
+//
+//        @Summary                Delete advertisement
+//        @Description        Delete car advertisement
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                StoreRequest        true        "Ad data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=string}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{id} [delete]
+func (ctrl *Controller) delete(c *gin.Context) <span class="cov0" title="0">{
+        id, err := ctrl.handler.ParseIDFromPath(c, "adId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Invalid path id.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">err = ctrl.service.Delete(
+                c.Request.Context(),
+                id,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("Ad with ID %d updated successfully!", id)
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   "success",
+        })</span>
+}
+
+// Handle Favorite
+//
+//        @Summary                Add/remove ad to favorites
+//        @Description        Toggle ad in user's favorites
+//        @Tags                        Favorites
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                HandleFavoriteRequest        true        "Ad ID"
+//        @Success                200                {object}        handler.BasicResponseDTO
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/favorites [post]
+func (ctrl *Controller) handleFavorite(c *gin.Context) <span class="cov0" title="0">{
+        var request HandleFavoriteRequest
+        if err := c.ShouldBindJSON(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad favorite error. Invalid request body.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">userId, _ := c.Get("userId")
+
+        err := ctrl.service.HandleFavorite(
+                c.Request.Context(),
+                request.AdId,
+                userId.(int64),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad favorite error. Internal error.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   gin.H{"chat": "success"},
+        })</span>
+}
+
+// Get NFT Info
+//
+//        @Summary                Get NFT metadata
+//        @Description        Get NFT information for ad
+//        @Tags                        NFT
+//        @Accept                        json
+//        @Produce                json
+//        @Param                        adId        path                int        true        "Ad ID"
+//        @Success                200                {object}        handler.BasicResponseDTO{data=nft.NFT}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                404                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{adId}/nft [get]
+func (ctrl *Controller) getNftInfo(c *gin.Context) <span class="cov0" title="0">{
+        _, err := ctrl.handler.ParseIDFromPath(c, "adId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad getNftInfo error. Invalid request body.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">adv, err := ctrl.service.GetTokenInfo(c.Request.Context(), 5552)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad getNftInfo error. Internal error.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   adv,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package ad
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/ad"
+        "car-sell-buy-system/pkg/storage/local"
+        "mime/multipart"
+)
+
+type StoreRequest struct {
+        Title         string                `form:"title"`
+        Description   string                `form:"description"`
+        Price         float64               `form:"price"`
+        Vin           string                `form:"vin"`
+        Brand         string                `form:"brand"`
+        Model         string                `form:"model"`
+        YearOfRelease int64                 `form:"year_of_release"`
+        Image         *multipart.FileHeader `form:"image" binding:"required"`
+}
+
+func (r StoreRequest) ToDTO() (ad.StoreDTO, error) <span class="cov0" title="0">{
+        var image *local.UploadedFile
+        if r.Image != nil </span><span class="cov0" title="0">{
+                img, err := local.ConvertUploadedFile(r.Image)
+                if err == nil </span><span class="cov0" title="0">{
+                        image = img
+                }</span>
+        }
+
+        <span class="cov0" title="0">return ad.StoreDTO{
+                Title:         r.Title,
+                Description:   r.Description,
+                Price:         r.Price,
+                Vin:           r.Vin,
+                Brand:         r.Brand,
+                Model:         r.Model,
+                YearOfRelease: r.YearOfRelease,
+                Image:         image,
+        }, nil</span>
+}
+
+type UpdateRequest struct {
+        Title           string                `form:"title" binding:"required"`
+        Description     string                `form:"description" binding:"required"`
+        Price           float64               `form:"price" binding:"required"`
+        Vin             string                `form:"vin" binding:"required"`
+        Brand           string                `form:"brand" binding:"required"`
+        Model           string                `form:"model" binding:"required"`
+        YearOfRelease   int64                 `form:"year_of_release" binding:"required"`
+        Image           *multipart.FileHeader `form:"image"`
+        CurrentImageUrl string                `form:"image_url" binding:"required"`
+}
+
+func (r UpdateRequest) ToDTO() (ad.UpdateDTO, error) <span class="cov0" title="0">{
+        var image *local.UploadedFile
+        if r.Image != nil </span><span class="cov0" title="0">{
+                img, err := local.ConvertUploadedFile(r.Image)
+                if err != nil </span><span class="cov0" title="0">{
+                        return ad.UpdateDTO{}, err
+                }</span>
+                <span class="cov0" title="0">image = img</span>
+        }
+
+        <span class="cov0" title="0">return ad.UpdateDTO{
+                Title:           r.Title,
+                Description:     r.Description,
+                Price:           r.Price,
+                Vin:             r.Vin,
+                Brand:           r.Brand,
+                Model:           r.Model,
+                YearOfRelease:   r.YearOfRelease,
+                Image:           image,
+                CurrentImageUrl: r.CurrentImageUrl,
+        }, nil</span>
+}
+
+type HandleFavoriteRequest struct {
+        AdId int64 `json:"ad_id"`
+}
+
+func (r HandleFavoriteRequest) ToDTO() ad.HandleFavoriteDTO <span class="cov0" title="0">{
+        return ad.HandleFavoriteDTO{
+                AdId: r.AdId,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package ad
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/ad"
+        "car-sell-buy-system/pkg/pagination"
+        "time"
+)
+
+type Response struct {
+        Id            int64     `json:"id"`
+        Title         string    `json:"title"`
+        Description   string    `json:"description"`
+        Price         float64   `json:"price"`
+        Vin           string    `json:"vin"`
+        Brand         string    `json:"brand"`
+        Model         string    `json:"model"`
+        YearOfRelease int64     `json:"year_of_release"`
+        IsFavorite    bool      `json:"is_favorite"`
+        IsTokenMinted bool      `json:"is_token_minted"`
+        ImageUrl      string    `json:"image_url"`
+        UserId        int64     `json:"user_id"`
+        CreatedAt     time.Time `json:"created_at"`
+        UpdatedAt     time.Time `json:"updated_at"`
+        ChatExists    bool      `json:"chat_exists"`
+        Promotion     Promotion `json:"promotion"`
+        Category      string    `json:"category"`
+        RegNumber     string    `json:"reg_number"`
+        Type          string    `json:"type"`
+        Color         string    `json:"color"`
+        Hp            string    `json:"hp"`
+        FullWeight    string    `json:"full_weight"`
+        SoloWeight    string    `json:"solo_weight"`
+}
+
+type Promotion struct {
+        Status    string    `json:"status"`
+        ExpiresAt time.Time `json:"expires_at"`
+        Enabled   bool      `json:"enabled"`
+        TariffId  int       `json:"tariff_id"`
+}
+
+func newResponse(ad ad.Ad) Response <span class="cov0" title="0">{
+        var promotion Promotion
+        if ad.Promotion.ExpiresAt != nil </span><span class="cov0" title="0">{
+                promotion = Promotion{
+                        Status:    *ad.Promotion.Status,
+                        ExpiresAt: *ad.Promotion.ExpiresAt,
+                        Enabled:   ad.Promotion.ExpiresAt.After(time.Now()),
+                        TariffId:  *ad.Promotion.TariffId,
+                }
+        }</span>
+
+        <span class="cov0" title="0">return Response{
+                Id:            ad.Id,
+                Title:         ad.Title,
+                Description:   ad.Description,
+                Price:         ad.Price,
+                Vin:           ad.Vin,
+                Brand:         ad.Brand,
+                Model:         ad.Model,
+                YearOfRelease: ad.YearOfRelease,
+                IsFavorite:    ad.IsFavorite,
+                IsTokenMinted: ad.IsTokenMinted,
+                ImageUrl:      ad.ImageUrl,
+                UserId:        ad.UserId,
+                CreatedAt:     ad.CreatedAt,
+                UpdatedAt:     ad.UpdatedAt,
+                ChatExists:    ad.ChatExists,
+                Promotion:     promotion,
+                Category:      ad.Category,
+                RegNumber:     ad.RegNumber,
+                Type:          ad.Type,
+                Color:         ad.Color,
+                Hp:            ad.Hp,
+                FullWeight:    ad.FullWeight,
+                SoloWeight:    ad.SoloWeight,
+        }</span>
+}
+
+type ListResponse struct {
+        Ads   []Response           `json:"ads"`
+        Range pagination.ListRange `json:"range"`
+}
+
+func newListResponse(ads []ad.Ad, params pagination.Params, count uint64) ListResponse <span class="cov0" title="0">{
+        responses := make([]Response, 0, len(ads))
+
+        for _, adv := range ads </span><span class="cov0" title="0">{
+                responses = append(responses, newResponse(adv))
+        }</span>
+
+        <span class="cov0" title="0">return ListResponse{
+                Ads:   responses,
+                Range: pagination.NewListRange(params, count),
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package chat
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/chat"
+        "car-sell-buy-system/internal/ads-service/middleware"
+        "car-sell-buy-system/pkg/handler"
+        "car-sell-buy-system/pkg/logger"
+        "context"
+        "github.com/gin-gonic/gin"
+        "net/http"
+)
+
+type Service interface {
+        StoreMessage(ctx context.Context, chatId int64, dto chat.StoreMessageDTO) (chat.Message, error)
+        StoreChat(ctx context.Context, dto chat.StoreChatDTO) (chat.Chat, error)
+        ListChats(ctx context.Context) ([]chat.Chat, int64, error)
+        ListMessagesByChatId(ctx context.Context, chatId int64) ([]chat.Message, int64, error)
+}
+
+type Controller struct {
+        handler *handler.BaseHandler
+        service Service
+}
+
+func NewController(l logger.Interface, service Service) *Controller <span class="cov0" title="0">{
+        return &amp;Controller{
+                handler.NewBaseHandler(l),
+                service,
+        }
+}</span>
+
+func (ctrl *Controller) InitAPI(router *gin.RouterGroup) <span class="cov0" title="0">{
+        h := router.Group("/chats")
+        </span><span class="cov0" title="0">{
+                // Protected
+                h.Use(middleware.RequiredAuthMiddleware(ctrl.handler.Logger))
+                h.GET("", ctrl.listChats)
+                h.POST("", ctrl.storeChat)
+                h.GET("/:chatId/messages", ctrl.listMessagesByChatId)
+                h.POST("/:chatId/messages", ctrl.storeMessage)
+        }</span>
+}
+
+// getById godoc
+//
+//        @Summary                Get advertisement by ID
+//        @Description        Get car advertisement details
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Param                        id        path                int        true        "Ad ID"
+//        @Success                200        {object}        handler.BasicResponseDTO
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                500        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{id} [get]
+//func (ctrl *Controller) getById(c *gin.Context) {
+//        adId, err := ctrl.handler.ParseIDFromPath(c, "adId")
+//        if err != nil {
+//                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad not found. Invalid id")
+//
+//                return
+//        }
+//
+//        adv, err := ctrl.service.GetById(c.Request.Context(), adId)
+//        if err != nil {
+//                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad not found. Internal error.")
+//
+//                return
+//        }
+//
+//        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+//                Status: http.StatusOK,
+//                Data:   newResponse(adv),
+//        })
+//}
+
+// Store Chat
+//
+//        @Summary                Create new chat
+//        @Description        Create new chat
+//        @Tags                        Chats
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                StoreChatRequest        true        "Chat data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=chat.ChatResponse}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/chats [post]
+func (ctrl *Controller) storeChat(c *gin.Context) <span class="cov0" title="0">{
+        var request StoreChatRequest
+        if err := c.ShouldBind(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Chat store error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        cht, err := ctrl.service.StoreChat(
+                ctx,
+                request.ToDTO(),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Chat store error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("Chat with ID %d created successfully!", cht.Id)
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newChatResponse(cht),
+        })</span>
+}
+
+// Store Message
+//
+//        @Summary                Create new message
+//        @Description        Create new message
+//        @Tags                        Chats
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                StoreMessageRequest        true        "Message data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=chat.MessageResponse}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/chats/{id}/message [post]
+func (ctrl *Controller) storeMessage(c *gin.Context) <span class="cov0" title="0">{
+        userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        var request StoreMessageRequest
+        if err := c.ShouldBind(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Message store error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">chatId, err := ctrl.handler.ParseIDFromPath(c, "chatId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Message store error. Invalid parse chat id.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">msg, err := ctrl.service.StoreMessage(
+                ctx,
+                chatId,
+                request.ToDTO(),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Message store error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info("Message with ID %d created successfully!", msg.Id)
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newMessageResponse(msg),
+        })</span>
+}
+
+// List Messages
+//
+//        @Summary                Get messages list
+//        @Description        Get messages list
+//        @Tags                        Chats
+//        @Accept                        json
+//        @Produce                json
+//        @Success                200        {object}        handler.BasicResponseDTO{data=chat.ListMessageResponse}
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                404        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/chats/{id}/messages [get]
+func (ctrl *Controller) listMessagesByChatId(c *gin.Context) <span class="cov0" title="0">{
+        userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        chatId, err := ctrl.handler.ParseIDFromPath(c, "chatId")
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad not found. Invalid id")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">messages, _, err := ctrl.service.ListMessagesByChatId(ctx, chatId)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Chats not found.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newListMessageResponse(messages),
+        })</span>
+}
+
+// List Chats
+//
+//        @Summary                Get chats list
+//        @Description        Get chats list
+//        @Tags                        Chats
+//        @Accept                        json
+//        @Produce                json
+//        @Success                200        {object}        handler.BasicResponseDTO{data=chat.ListChatResponse}
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                404        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/chats [get]
+func (ctrl *Controller) listChats(c *gin.Context) <span class="cov0" title="0">{
+        userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        chats, _, err := ctrl.service.ListChats(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Chats not found.")
+
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newListChatsResponse(chats),
+        })</span>
+}
+
+// Delete Ad
+//
+//        @Summary                Delete advertisement
+//        @Description        Delete car advertisement
+//        @Tags                        Ads
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Param                        input        body                StoreRequest        true        "Ad data"
+//        @Success                201                {object}        handler.BasicResponseDTO{data=string}
+//        @Failure                400                {object}        handler.ErrorResponse
+//        @Failure                500                {object}        handler.ErrorResponse
+//        @Router                        /api/v1/ads/{id} [delete]
+//func (ctrl *Controller) delete(c *gin.Context) {
+//        id, err := ctrl.handler.ParseIDFromPath(c, "adId")
+//        if err != nil {
+//                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Invalid path id.")
+//                return
+//        }
+//
+//        err = ctrl.service.Delete(
+//                c.Request.Context(),
+//                id,
+//        )
+//        if err != nil {
+//                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Ad update error. Internal error.")
+//                return
+//        }
+//
+//        ctrl.handler.Logger.Info("Ad with ID %d updated successfully!", id)
+//
+//        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+//                Status: http.StatusOK,
+//                Data:   "success",
+//        })
+//}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package chat
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/chat"
+)
+
+type StoreChatRequest struct {
+        SellerId int64 `json:"seller_id"`
+        AdId     int64 `json:"ad_id"`
+}
+
+func (r StoreChatRequest) ToDTO() chat.StoreChatDTO <span class="cov0" title="0">{
+        return chat.StoreChatDTO{
+                SellerId: r.SellerId,
+                AdId:     r.AdId,
+        }
+}</span>
+
+type StoreMessageRequest struct {
+        ChatId int64  `json:"chat_id"`
+        Text   string `json:"text"`
+}
+
+func (r StoreMessageRequest) ToDTO() chat.StoreMessageDTO <span class="cov0" title="0">{
+        return chat.StoreMessageDTO{
+                Text: r.Text,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package chat
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/chat"
+        "time"
+)
+
+type ChatResponse struct {
+        Id        int64     `json:"id"`
+        BuyerId   int64     `json:"buyer_id"`
+        SellerId  int64     `json:"seller_id"`
+        AdId      int64     `json:"ad_id"`
+        CreatedAt time.Time `json:"created_at"`
+}
+
+func newChatResponse(chat chat.Chat) ChatResponse <span class="cov0" title="0">{
+        return ChatResponse{
+                Id:        chat.Id,
+                BuyerId:   chat.BuyerId,
+                SellerId:  chat.SellerId,
+                AdId:      chat.AdId,
+                CreatedAt: chat.CreatedAt,
+        }
+}</span>
+
+type ListChatResponse struct {
+        Chats []ChatResponse `json:"chats"`
+}
+
+func newListChatsResponse(chats []chat.Chat) ListChatResponse <span class="cov0" title="0">{
+        responses := make([]ChatResponse, 0, len(chats))
+
+        for _, chs := range chats </span><span class="cov0" title="0">{
+                responses = append(responses, newChatResponse(chs))
+        }</span>
+
+        <span class="cov0" title="0">return ListChatResponse{
+                Chats: responses,
+        }</span>
+}
+
+type MessageResponse struct {
+        Id        int64     `json:"id"`
+        ChatId    int64     `json:"chat_id"`
+        SenderId  int64     `json:"sender_id"`
+        Text      string    `json:"text"`
+        IsRead    bool      `json:"is_read"`
+        CreatedAt time.Time `json:"created_at"`
+        Mine      bool      `json:"mine"`
+}
+
+func newMessageResponse(message chat.Message) MessageResponse <span class="cov0" title="0">{
+        return MessageResponse{
+                Id:        message.Id,
+                ChatId:    message.ChatId,
+                SenderId:  message.SenderId,
+                Text:      message.Text,
+                IsRead:    message.IsRead,
+                CreatedAt: message.CreatedAt,
+                Mine:      message.Mine,
+        }
+}</span>
+
+type ListMessageResponse struct {
+        Messages []MessageResponse `json:"messages"`
+}
+
+func newListMessageResponse(messages []chat.Message) ListMessageResponse <span class="cov0" title="0">{
+        responses := make([]MessageResponse, 0, len(messages))
+
+        for _, msg := range messages </span><span class="cov0" title="0">{
+                responses = append(responses, newMessageResponse(msg))
+        }</span>
+
+        <span class="cov0" title="0">return ListMessageResponse{
+                Messages: responses,
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package payment
+
+import (
+        "car-sell-buy-system/config"
+        "car-sell-buy-system/internal/ads-service/domain/payment"
+        "car-sell-buy-system/internal/ads-service/middleware"
+        "car-sell-buy-system/pkg/handler"
+        "car-sell-buy-system/pkg/logger"
+        "context"
+        "encoding/json"
+        "fmt"
+        "github.com/gin-gonic/gin"
+        "net/http"
+)
+
+type Service interface {
+        CreatePayment(ctx context.Context, dto payment.CreatePaymentDto) (payment.Payment, error)
+        ProcessWebhook(ctx context.Context, dto payment.ProcessWebhookPaymentDto) (string, error)
+}
+
+type Controller struct {
+        handler *handler.BaseHandler
+        service Service
+        config  *config.Config
+}
+
+func NewController(l logger.Interface, service Service, config *config.Config) *Controller <span class="cov0" title="0">{
+        return &amp;Controller{
+                handler.NewBaseHandler(l),
+                service,
+                config,
+        }
+}</span>
+
+func (ctrl *Controller) InitAPI(router *gin.RouterGroup) <span class="cov0" title="0">{
+        h := router.Group("/payments")
+        </span><span class="cov0" title="0">{
+                //h.Use(yokassa.AuthMiddleware(
+                //        ctrl.handler.Logger,
+                //        strings.Split(ctrl.config.Yokassa.WebhookAllowedIpAddresses, ", "),
+                //))
+                h.POST("/webhook", ctrl.processWebhook)
+
+                // Protected
+                h.Use(middleware.RequiredAuthMiddleware(ctrl.handler.Logger))
+                h.POST("", ctrl.createPayment)
+        }</span>
+}
+
+// Регистрация платежа
+//
+//        @Summary                Создание платежа
+//        @Description        Регистрация платежа и генерация ссылки
+//        @Tags                        Payments
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Success                200        {object}        handler.BasicResponseDTO{data=payment.Response}
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                500        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/payments [post]
+func (ctrl *Controller) createPayment(c *gin.Context) <span class="cov0" title="0">{
+        userId, _ := c.Get("userId")
+        ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+        var request CreatePaymentRequest
+        if err := c.ShouldBindJSON(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Create payment error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">p, err := ctrl.service.CreatePayment(
+                ctx,
+                request.toDTO(userId.(int64)),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Create payment error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">jsonPayment, err := json.Marshal(p)
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Create json payment error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info(fmt.Sprintf("Payment created successfully!: %s", jsonPayment))
+
+        c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   newResponse(p),
+        })</span>
+}
+
+// Вебхук для платежа
+//
+//        @Summary                Нотификация платежа
+//        @Description        Обработка вебхука и смена статуса платежа
+//        @Tags                        Payments
+//        @Accept                        json
+//        @Produce                json
+//        @Security                BearerAuth
+//        @Success                200        {object}        handler.BasicResponseDTO{data=payment.StatusChangedResponse}
+//        @Failure                400        {object}        handler.ErrorResponse
+//        @Failure                500        {object}        handler.ErrorResponse
+//        @Router                        /api/v1/payments/webhook [post]
+func (ctrl *Controller) processWebhook(c *gin.Context) <span class="cov0" title="0">{
+        var request WebhookPaymentRequest
+        if err := c.ShouldBindJSON(&amp;request); err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Process webhook payment error. Invalid request body.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctrl.handler.Logger.Info(fmt.Sprintf("Начата обработка вебхука: %v", request.toDTO()))
+        newStatus, err := ctrl.service.ProcessWebhook(
+                c.Request.Context(),
+                request.toDTO(),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                ctrl.handler.ErrorResponse(c, http.StatusInternalServerError, err, "Process webhook payment error. Internal error.")
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, handler.BasicResponseDTO{
+                Status: http.StatusOK,
+                Data:   StatusChangedResponse{Status: newStatus},
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package payment
+
+import "car-sell-buy-system/internal/ads-service/domain/payment"
+
+type CreatePaymentRequest struct {
+        AdId     int64 `json:"ad_id"`
+        TariffId int64 `json:"tariff_id"`
+}
+
+func (r CreatePaymentRequest) toDTO(userId int64) payment.CreatePaymentDto <span class="cov0" title="0">{
+        return payment.CreatePaymentDto{
+                AdId:     r.AdId,
+                UserId:   userId,
+                TariffId: r.TariffId,
+        }
+}</span>
+
+type WebhookPaymentRequest struct {
+        Type   string `json:"type"`
+        Event  string `json:"event"`
+        Object struct {
+                Id     string `json:"id"`
+                Status string `json:"status"`
+                Paid   bool   `json:"paid"`
+        } `json:"object"`
+}
+
+func (r WebhookPaymentRequest) toDTO() payment.ProcessWebhookPaymentDto <span class="cov0" title="0">{
+        return payment.ProcessWebhookPaymentDto{
+                TransactionId: r.Object.Id,
+                Status:        r.Object.Status,
+                Paid:          r.Object.Paid,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package payment
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/payment"
+        "car-sell-buy-system/internal/ads-service/domain/tariff"
+        "time"
+)
+
+type Response struct {
+        Id               int64         `json:"id"`
+        TransactionId    string        `json:"transaction_id"`
+        AdId             int64         `json:"ad_id"`
+        UserId           int64         `json:"user_id"`
+        Tariff           tariff.Tariff `json:"tariff"`
+        Status           string        `json:"status"`
+        ConfirmationLink string        `json:"confirmation_link"`
+        UpdatedAt        time.Time     `json:"updated_at"`
+        CreatedAt        time.Time     `json:"created_at"`
+        ExpiresAt        time.Time     `json:"expires_at"`
+}
+
+func newResponse(p payment.Payment) Response <span class="cov0" title="0">{
+        return Response{
+                Id:               p.Id,
+                TransactionId:    p.TransactionId,
+                AdId:             p.AdId,
+                UserId:           p.UserId,
+                Tariff:           p.Tariff,
+                Status:           p.Status,
+                ConfirmationLink: p.ConfirmationLink,
+                UpdatedAt:        p.UpdatedAt,
+                CreatedAt:        p.CreatedAt,
+                ExpiresAt:        p.ExpiresAt,
+        }
+}</span>
+
+type StatusChangedResponse struct {
+        Status string `json:"status"`
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package v1
+
+import (
+        "car-sell-buy-system/config"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/chat"
+        "car-sell-buy-system/internal/ads-service/controller/http/v1/payment"
+        "car-sell-buy-system/pkg/logger"
+        "github.com/gin-gonic/gin"
+)
+
+type V1 struct {
+        adService      ad.Service
+        paymentService payment.Service
+        chatService    chat.Service
+        logger         logger.Interface
+        config         *config.Config
+}
+
+func NewController(
+        adService ad.Service,
+        paymentService payment.Service,
+        chatService chat.Service,
+        logger logger.Interface,
+        config *config.Config,
+) *V1 <span class="cov0" title="0">{
+        return &amp;V1{
+                adService:      adService,
+                paymentService: paymentService,
+                chatService:    chatService,
+                logger:         logger,
+                config:         config,
+        }
+}</span>
+
+func (ctrl *V1) InitAPI(router *gin.RouterGroup) <span class="cov0" title="0">{
+        v1 := router.Group("/v1")
+        </span><span class="cov0" title="0">{
+                ad.NewController(ctrl.logger, ctrl.adService).InitAPI(v1)
+                payment.NewController(ctrl.logger, ctrl.paymentService, ctrl.config).InitAPI(v1)
+                chat.NewController(ctrl.logger, ctrl.chatService).InitAPI(v1)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package ad
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/nft"
+        "car-sell-buy-system/pkg/storage/local"
+        "context"
+        "math/big"
+)
+
+type Storage interface {
+        Save(file *local.UploadedFile) (string, error)
+}
+
+type NftRepository interface {
+        GetNftInfo(ctx context.Context, tokenId *big.Int) (nft.NFT, error)
+}
+
+type Repository interface {
+        GetById(ctx context.Context, id int64) (Ad, error)
+        Store(ctx context.Context, dto StoreDTO) (Ad, error)
+        Update(ctx context.Context, id int64, dto UpdateDTO) error
+        List(ctx context.Context, dto ListDTO) ([]Ad, uint64, error)
+        Delete(ctx context.Context, id int64) error
+        HandleFavorite(ctx context.Context, adId, userId int64) error
+}
+
+type Service struct {
+        repository    Repository
+        nftRepository NftRepository
+        storage       Storage
+}
+
+func NewService(
+        repository Repository,
+        nftRepository NftRepository,
+        storage Storage,
+) *Service <span class="cov10" title="17">{
+        return &amp;Service{
+                repository:    repository,
+                nftRepository: nftRepository,
+                storage:       storage,
+        }
+}</span>
+
+func (s *Service) GetById(ctx context.Context, id int64) (Ad, error) <span class="cov3" title="2">{
+        ad, err := s.repository.GetById(ctx, id)
+        if err != nil </span><span class="cov1" title="1">{
+                return Ad{}, err
+        }</span>
+
+        <span class="cov1" title="1">return ad, nil</span>
+}
+
+func (s *Service) Store(ctx context.Context, dto StoreDTO) (Ad, error) <span class="cov4" title="3">{
+        if dto.Image != nil </span><span class="cov3" title="2">{
+                pth, err := s.storage.Save(dto.Image)
+                if err != nil </span><span class="cov1" title="1">{
+                        return Ad{}, err
+                }</span>
+
+                <span class="cov1" title="1">dto.CurrentImageUrl = pth</span>
+        }
+
+        <span class="cov3" title="2">storedAd, err := s.repository.Store(ctx, dto)
+        if err != nil </span><span class="cov0" title="0">{
+                return Ad{}, err
+        }</span>
+
+        <span class="cov3" title="2">return storedAd, nil</span>
+}
+
+func (s *Service) Update(ctx context.Context, id int64, dto UpdateDTO) error <span class="cov5" title="4">{
+        if dto.Image != nil </span><span class="cov3" title="2">{
+                path, err := s.storage.Save(dto.Image)
+                if err != nil </span><span class="cov1" title="1">{
+                        return err
+                }</span>
+                <span class="cov1" title="1">dto.CurrentImageUrl = path</span>
+        }
+
+        <span class="cov4" title="3">if err := s.repository.Update(ctx, id, dto); err != nil </span><span class="cov1" title="1">{
+                return err
+        }</span>
+
+        <span class="cov3" title="2">return nil</span>
+}
+
+func (s *Service) List(ctx context.Context, dto ListDTO) ([]Ad, uint64, error) <span class="cov3" title="2">{
+        ads, count, err := s.repository.List(ctx, dto)
+        if err != nil </span><span class="cov1" title="1">{
+                return nil, 0, err
+        }</span>
+
+        <span class="cov1" title="1">return ads, count, nil</span>
+}
+
+func (s *Service) Delete(ctx context.Context, id int64) error <span class="cov3" title="2">{
+        if err := s.repository.Delete(ctx, id); err != nil </span><span class="cov1" title="1">{
+                return err
+        }</span>
+
+        <span class="cov1" title="1">return nil</span>
+}
+
+func (s *Service) HandleFavorite(ctx context.Context, adId, userId int64) error <span class="cov3" title="2">{
+        err := s.repository.HandleFavorite(ctx, adId, userId)
+        if err != nil </span><span class="cov1" title="1">{
+                return err
+        }</span>
+
+        <span class="cov1" title="1">return nil</span>
+}
+
+func (s *Service) GetTokenInfo(ctx context.Context, tokenId int64) (nft.NFT, error) <span class="cov3" title="2">{
+        nftInfo, err := s.nftRepository.GetNftInfo(ctx, big.NewInt(tokenId))
+        if err != nil </span><span class="cov1" title="1">{
+                return nft.NFT{}, err
+        }</span>
+
+        <span class="cov1" title="1">return nftInfo, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package chat
+
+import (
+        "context"
+)
+
+type Repository interface {
+        StoreMessage(ctx context.Context, chatId int64, dto StoreMessageDTO) (Message, error)
+        StoreChat(ctx context.Context, dto StoreChatDTO) (Chat, error)
+        ListChats(ctx context.Context) ([]Chat, int64, error)
+        ListMessagesByChatId(ctx context.Context, chatId int64) ([]Message, int64, error)
+}
+
+type Service struct {
+        repository Repository
+}
+
+func NewService(
+        repository Repository,
+) *Service <span class="cov10" title="8">{
+        return &amp;Service{
+                repository: repository,
+        }
+}</span>
+
+func (s *Service) StoreChat(ctx context.Context, dto StoreChatDTO) (Chat, error) <span class="cov4" title="2">{
+        chat, err := s.repository.StoreChat(ctx, dto)
+        if err != nil </span><span class="cov1" title="1">{
+                return Chat{}, err
+        }</span>
+
+        <span class="cov1" title="1">return chat, nil</span>
+}
+
+func (s *Service) StoreMessage(ctx context.Context, chatId int64, dto StoreMessageDTO) (Message, error) <span class="cov4" title="2">{
+        chat, err := s.repository.StoreMessage(ctx, chatId, dto)
+        if err != nil </span><span class="cov1" title="1">{
+                return Message{}, err
+        }</span>
+
+        <span class="cov1" title="1">return chat, nil</span>
+}
+
+func (s *Service) ListChats(ctx context.Context) ([]Chat, int64, error) <span class="cov4" title="2">{
+        chats, count, err := s.repository.ListChats(ctx)
+        if err != nil </span><span class="cov1" title="1">{
+                return nil, 0, err
+        }</span>
+
+        <span class="cov1" title="1">return chats, count, nil</span>
+}
+
+func (s *Service) ListMessagesByChatId(ctx context.Context, chatId int64) ([]Message, int64, error) <span class="cov4" title="2">{
+        chats, count, err := s.repository.ListMessagesByChatId(ctx, chatId)
+        if err != nil </span><span class="cov1" title="1">{
+                return nil, 0, err
+        }</span>
+
+        <span class="cov1" title="1">return chats, count, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package payment
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/tariff"
+        "context"
+)
+
+type Repository interface {
+        Store(ctx context.Context, payment Payment) (Payment, error)
+        UpdateStatusByTransactionId(ctx context.Context, transactionId string, status string) error
+}
+
+type TariffRepository interface {
+        GetById(ctx context.Context, id int64) (tariff.Tariff, error)
+}
+
+type ApiRepository interface {
+        CreatePayment(ctx context.Context, payment Payment) (Payment, error)
+        ConfirmPayment(ctx context.Context, transactionId string) (Payment, error)
+}
+
+type Service struct {
+        repository       Repository
+        tariffRepository TariffRepository
+        apiRepository    ApiRepository
+}
+
+func NewService(repository Repository, tariffRepository TariffRepository, apiRepository ApiRepository) *Service <span class="cov10" title="6">{
+        return &amp;Service{
+                repository:       repository,
+                tariffRepository: tariffRepository,
+                apiRepository:    apiRepository,
+        }
+}</span>
+
+func (s *Service) CreatePayment(ctx context.Context, dto CreatePaymentDto) (Payment, error) <span class="cov7" title="4">{
+        trf, err := s.tariffRepository.GetById(ctx, dto.TariffId)
+        if err != nil </span><span class="cov1" title="1">{
+                return Payment{}, err
+        }</span>
+
+        <span class="cov6" title="3">pmnt := Payment{
+                AdId:   dto.AdId,
+                UserId: dto.UserId,
+                Tariff: trf,
+        }
+
+        p, err := s.apiRepository.CreatePayment(ctx, pmnt)
+        if err != nil </span><span class="cov1" title="1">{
+                return Payment{}, err
+        }</span>
+
+        <span class="cov4" title="2">p, err = s.repository.Store(ctx, p)
+        if err != nil </span><span class="cov1" title="1">{
+                return Payment{}, err
+        }</span>
+
+        <span class="cov1" title="1">return p, nil</span>
+}
+
+func (s *Service) ProcessWebhook(ctx context.Context, dto ProcessWebhookPaymentDto) (string, error) <span class="cov4" title="2">{
+        status := dto.Status
+
+        if status == "waiting_for_capture" </span><span class="cov1" title="1">{
+                response, err := s.apiRepository.ConfirmPayment(ctx, dto.TransactionId)
+                if err != nil </span><span class="cov0" title="0">{
+                        return "", nil
+                }</span>
+
+                <span class="cov1" title="1">status = response.Status</span>
+        }
+
+        <span class="cov4" title="2">if err := s.repository.UpdateStatusByTransactionId(ctx, dto.TransactionId, status); err != nil </span><span class="cov1" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov1" title="1">return status, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package middleware
+
+import (
+        "car-sell-buy-system/pkg/grpc/api/sso_server_v1"
+        "car-sell-buy-system/pkg/logger"
+        "context"
+        "fmt"
+        "github.com/gin-gonic/gin"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        "net/http"
+        "time"
+)
+
+const grpcPort = "50051"
+
+func checkAuth(c *gin.Context) (*sso_server_v1.VerifyTokenResponse, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(fmt.Sprintf("sso:%s", grpcPort), grpc.WithTransportCredentials(insecure.NewCredentials()))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to connect SSO: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer conn.Close() // 1
+
+        client := sso_server_v1.NewSsoV1Client(conn)
+
+        ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second)
+        defer cancel()
+
+        response, err := client.VerifyToken(
+                ctx,
+                &amp;sso_server_v1.VerifyTokenRequest{Token: c.GetHeader("Authorization")},
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to request SSO: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return response, err</span>
+}
+
+// OptionalAuthMiddleware -.
+func OptionalAuthMiddleware(logger logger.Interface) gin.HandlerFunc <span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov0" title="0">{
+                response, err := checkAuth(c)
+                if err != nil </span><span class="cov0" title="0">{
+                        logger.Error(fmt.Sprintf("OptionalAuthMiddleware: %v", err))
+                }</span>
+
+                <span class="cov0" title="0">if response != nil &amp;&amp; response.Valid </span><span class="cov0" title="0">{
+                        c.Set("userId", response.UserId)
+                }</span> else<span class="cov0" title="0"> {
+                        logger.Debug("OptionalAuthMiddleware: User is guest")
+                }</span>
+
+                <span class="cov0" title="0">c.Next()</span>
+        }
+}
+
+// RequiredAuthMiddleware -.
+func RequiredAuthMiddleware(logger logger.Interface) gin.HandlerFunc <span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov0" title="0">{
+                response, err := checkAuth(c)
+                if err != nil </span><span class="cov0" title="0">{
+                        logger.Error(fmt.Sprintf("RequiredAuthMiddleware: %v", err))
+
+                        c.JSON(http.StatusUnauthorized, gin.H{"error": "Доступ запрещен!"})
+                        c.Abort()
+                        return
+                }</span>
+
+                <span class="cov0" title="0">if response == nil || !response.Valid </span><span class="cov0" title="0">{
+                        logger.Error(fmt.Sprintf("RequiredAuthMiddleware: User is not logined: %v", err))
+
+                        c.JSON(http.StatusUnauthorized, gin.H{"error": "Доступ запрещен!"})
+                        c.Abort()
+                        return
+                }</span>
+
+                <span class="cov0" title="0">logger.Debug(fmt.Sprintf("Response from SSO: %d", response.UserId))
+
+                c.Set("userId", response.UserId)
+                c.Next()</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package middleware
+
+import (
+        "github.com/gin-gonic/gin"
+        "github.com/prometheus/client_golang/prometheus"
+)
+
+func IncreaseTotalRequestsMetric(metric *prometheus.CounterVec) gin.HandlerFunc <span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov0" title="0">{
+                metric.WithLabelValues("total_requests").Inc()
+                c.Next()
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package yokassa
+
+import (
+        "car-sell-buy-system/pkg/logger"
+        "fmt"
+        "github.com/gin-gonic/gin"
+        "net/http"
+        "slices"
+        "strings"
+)
+
+func AuthMiddleware(logger logger.Interface, whitelist []string) gin.HandlerFunc <span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov0" title="0">{
+                _, found := slices.BinarySearch(whitelist, c.ClientIP())
+
+                logger.Info(fmt.Sprintf(
+                        "Попытка аутентификации вебхука Yokassa IP: %s, Whitelist: %s, Auth: %t",
+                        c.ClientIP(),
+                        strings.Join(whitelist, ", "),
+                        found,
+                ))
+
+                if !found </span><span class="cov0" title="0">{
+                        c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+                                "status": http.StatusForbidden,
+                                "chat":   "Permission denied!",
+                        })
+                        return
+                }</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package psql
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/ad"
+        "car-sell-buy-system/internal/ads-service/repository/psql/filter"
+        "car-sell-buy-system/internal/ads-service/repository/psql/sort"
+        "car-sell-buy-system/pkg/logger"
+        "car-sell-buy-system/pkg/postgres"
+        "car-sell-buy-system/pkg/sqlutil"
+        "context"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+        "time"
+)
+
+const (
+        AdTableName            = "ads"
+        UserFavoritesTableName = "user_favorites"
+)
+
+type AdRepository struct {
+        *postgres.Postgres
+        logger logger.Interface
+}
+
+func NewAdRepository(pg *postgres.Postgres, logger logger.Interface) *AdRepository <span class="cov0" title="0">{
+        return &amp;AdRepository{
+                pg,
+                logger,
+        }
+}</span>
+
+func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+
+        selectBuilder := r.Builder.
+                Select(
+                        // ad
+                        sqlutil.TableColumn(AdTableName, "id"),
+                        sqlutil.TableColumn(AdTableName, "title"),
+                        sqlutil.TableColumn(AdTableName, "description"),
+                        sqlutil.TableColumn(AdTableName, "price"),
+                        sqlutil.TableColumn(AdTableName, "vin"),
+                        sqlutil.TableColumn(AdTableName, "brand"),
+                        sqlutil.TableColumn(AdTableName, "model"),
+                        sqlutil.TableColumn(AdTableName, "year_of_release"),
+                        sqlutil.TableColumn(AdTableName, "image_url"),
+                        sqlutil.TableColumn(AdTableName, "user_id"),
+                        sqlutil.TableColumn(AdTableName, "created_at"),
+                        sqlutil.TableColumn(AdTableName, "updated_at"),
+                        sqlutil.TableColumn(AdTableName, "category"),
+                        sqlutil.TableColumn(AdTableName, "reg_number"),
+                        sqlutil.TableColumn(AdTableName, "type"),
+                        sqlutil.TableColumn(AdTableName, "color"),
+                        sqlutil.TableColumn(AdTableName, "hp"),
+                        sqlutil.TableColumn(AdTableName, "full_weight"),
+                        sqlutil.TableColumn(AdTableName, "solo_weight"),
+                ).
+                Column(squirrel.Alias(squirrel.Case().When(squirrel.Eq{"nfts.is_minted": "true"}, "true").Else("false"), "is_favorite"))
+
+        if userId != nil </span><span class="cov0" title="0">{
+                selectBuilder = selectBuilder.Column(
+                        squirrel.Alias(
+                                squirrel.
+                                        Case().
+                                        When(
+                                                squirrel.
+                                                        Select("1").
+                                                        Prefix("EXISTS (").
+                                                        From("chats").
+                                                        Where(squirrel.And{
+                                                                squirrel.Eq{"chats.buyer_id": userId},
+                                                                squirrel.Expr("chats.seller_id = ads.user_id"),
+                                                                squirrel.Expr("chats.ad_id = ads.id"),
+                                                        }).
+                                                        Suffix(")"),
+                                                "true",
+                                        ).
+                                        Else("false"),
+                                "chat_exists",
+                        ),
+                )
+        }</span> else<span class="cov0" title="0"> {
+                selectBuilder = selectBuilder.Column("false AS chat_exists")
+        }</span>
+
+        <span class="cov0" title="0">sql, args, err := selectBuilder.
+                Column("p1.status").
+                Column("p1.expires_at").
+                Column("p1.tariff_id").
+                From(AdTableName).
+                LeftJoin("payments p1 on p1.ad_id = ads.id").
+                LeftJoin("nfts on nfts.vin = ads.vin").
+                JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at &lt; p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id &lt; p2.payment_id)))").
+                Where("p2.payment_id IS NULL").
+                Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return ad.Ad{}, fmt.Errorf("AdRepository - GetById - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println("sql: ", sql)
+        fmt.Println("args: ", args)
+
+        var adv ad.Ad
+        err = r.Pool.
+                QueryRow(ctx, sql, args...).
+                Scan(
+                        &amp;adv.Id,
+                        &amp;adv.Title,
+                        &amp;adv.Description,
+                        &amp;adv.Price,
+                        &amp;adv.Vin,
+                        &amp;adv.Brand,
+                        &amp;adv.Model,
+                        &amp;adv.YearOfRelease,
+                        &amp;adv.ImageUrl,
+                        &amp;adv.UserId,
+                        &amp;adv.CreatedAt,
+                        &amp;adv.UpdatedAt,
+                        &amp;adv.Category,
+                        &amp;adv.RegNumber,
+                        &amp;adv.Type,
+                        &amp;adv.Color,
+                        &amp;adv.Hp,
+                        &amp;adv.FullWeight,
+                        &amp;adv.SoloWeight,
+                        &amp;adv.IsTokenMinted,
+                        &amp;adv.ChatExists,
+                        &amp;adv.Promotion.Status,
+                        &amp;adv.Promotion.ExpiresAt,
+                        &amp;adv.Promotion.TariffId,
+                )
+        if err != nil </span><span class="cov0" title="0">{
+                return ad.Ad{}, fmt.Errorf("AdRepository - GetById - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return adv, nil</span>
+}
+
+func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error) <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Insert(AdTableName).
+                Columns(
+                        "title",
+                        "description",
+                        "price",
+                        "vin",
+                        "brand",
+                        "model",
+                        "year_of_release",
+                        "is_token_minted",
+                        "image_url",
+                        "category",
+                        "reg_number",
+                        "type",
+                        "color",
+                        "hp",
+                        "full_weight",
+                        "solo_weight",
+                ).
+                Values(
+                        dto.Title,
+                        dto.Description,
+                        dto.Price,
+                        dto.Vin,
+                        dto.Brand,
+                        dto.Model,
+                        dto.YearOfRelease,
+                        false,
+                        dto.CurrentImageUrl,
+                        dto.Category,
+                        dto.RegNumber,
+                        dto.Type,
+                        dto.Color,
+                        dto.Hp,
+                        dto.FullWeight,
+                        dto.SoloWeight,
+                ).
+                Suffix("RETURNING id").
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return ad.Ad{}, fmt.Errorf("AdRepository - Store - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">adv := ad.Ad{
+                Title:         dto.Title,
+                Description:   dto.Description,
+                Price:         dto.Price,
+                Vin:           dto.Vin,
+                Brand:         dto.Brand,
+                Model:         dto.Model,
+                YearOfRelease: dto.YearOfRelease,
+                IsTokenMinted: false,
+                IsFavorite:    false,
+                ImageUrl:      dto.Image.Path,
+        }
+        err = r.Pool.
+                QueryRow(ctx, sql, args...).
+                Scan(&amp;adv.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return ad.Ad{}, fmt.Errorf("AdRepository - Store - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return adv, nil</span>
+}
+
+func (r *AdRepository) Update(ctx context.Context, id int64, dto ad.UpdateDTO) error <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Update(AdTableName).
+                Set("title", dto.Title).
+                Set("description", dto.Description).
+                Set("price", dto.Price).
+                Set("vin", dto.Vin).
+                Set("brand", dto.Brand).
+                Set("model", dto.Model).
+                Set("year_of_release", dto.YearOfRelease).
+                Set("image_url", dto.CurrentImageUrl).
+                Set("category", dto.Category).
+                Set("reg_number", dto.RegNumber).
+                Set("type", dto.Type).
+                Set("color", dto.Color).
+                Set("hp", dto.Hp).
+                Set("full_weight", dto.FullWeight).
+                Set("solo_weight", dto.SoloWeight).
+                Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - Update - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">_, err = r.Pool.Exec(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - Store - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (r *AdRepository) List(ctx context.Context, dto ad.ListDTO) ([]ad.Ad, uint64, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+
+        builder := r.Builder.
+                Select(
+                        sqlutil.TableColumn(AdTableName, "id"),
+                        sqlutil.TableColumn(AdTableName, "title"),
+                        sqlutil.TableColumn(AdTableName, "description"),
+                        sqlutil.TableColumn(AdTableName, "price"),
+                        sqlutil.TableColumn(AdTableName, "vin"),
+                        sqlutil.TableColumn(AdTableName, "brand"),
+                        sqlutil.TableColumn(AdTableName, "model"),
+                        sqlutil.TableColumn(AdTableName, "year_of_release"),
+                        sqlutil.TableColumn(AdTableName, "image_url"),
+                        sqlutil.TableColumn(AdTableName, "user_id"),
+                        sqlutil.TableColumn(AdTableName, "created_at"),
+                        sqlutil.TableColumn(AdTableName, "updated_at"),
+                        sqlutil.TableColumn(AdTableName, "category"),
+                        sqlutil.TableColumn(AdTableName, "reg_number"),
+                        sqlutil.TableColumn(AdTableName, "type"),
+                        sqlutil.TableColumn(AdTableName, "color"),
+                        sqlutil.TableColumn(AdTableName, "hp"),
+                        sqlutil.TableColumn(AdTableName, "full_weight"),
+                        sqlutil.TableColumn(AdTableName, "solo_weight"),
+                ).
+                Column(squirrel.Alias(squirrel.Case().When(squirrel.Expr("user_favorites.user_id = ?", userId), "true").Else("false"), "is_favorite")).
+                Column(squirrel.Alias(squirrel.Expr("COUNT(*) OVER()"), "total")).
+                Column(squirrel.Alias(squirrel.Case().When(squirrel.Eq{"nfts.is_minted": "true"}, "true").Else("false"), "is_favorite")).
+                Column("p1.status").
+                Column("p1.expires_at").
+                Column("p1.tariff_id").
+                LeftJoin("payments p1 on p1.ad_id = ads.id").
+                LeftJoin("nfts on nfts.vin = ads.vin").
+                JoinClause("LEFT OUTER JOIN payments p2 ON (ads.id = p2.ad_id AND (p1.expires_at &lt; p2.expires_at OR (p1.expires_at = p2.expires_at AND p1.payment_id &lt; p2.payment_id)))").
+                Where("p2.payment_id IS NULL").
+                From(AdTableName).
+                LeftJoin(UserFavoritesTableName + " ON " + sqlutil.TableColumn(UserFavoritesTableName, "ad_id") + " = " + sqlutil.TableColumn(AdTableName, "id")).
+                From(AdTableName)
+
+        builder, err := sqlutil.ApplyFilters(builder, &amp;filter.AdFilter{}, dto.Filter)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - sqlutil.ApplyFilters: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">builder = builder.
+                OrderBy("p1.tariff_id DESC nulls last")
+
+        builder, err = sqlutil.ApplySorts(builder, &amp;sort.AdSorter{}, dto.Sort)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - sqlutil.ApplySorts: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">builder = dto.Pagination.ApplyPaginationToBuilder(builder)
+
+        sql, args, err := builder.ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">r.logger.Info(fmt.Sprintf("SQL Выполненного запроса: %s \nАргументы запроса: %s", sql, args))
+
+        tm := time.Now()
+        rows, err := r.Pool.Query(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - r.Pool.Query: %w", err)
+        }</span>
+        <span class="cov0" title="0">diff := time.Now().Sub(tm).Milliseconds()
+        r.logger.Info(fmt.Sprintf("Затраченное время на запрос: %d мс", diff))
+
+        var ads []ad.Ad
+        var count uint64
+        for rows.Next() </span><span class="cov0" title="0">{
+                var adv ad.Ad
+                err = rows.Scan(
+                        &amp;adv.Id,
+                        &amp;adv.Title,
+                        &amp;adv.Description,
+                        &amp;adv.Price,
+                        &amp;adv.Vin,
+                        &amp;adv.Brand,
+                        &amp;adv.Model,
+                        &amp;adv.YearOfRelease,
+                        &amp;adv.ImageUrl,
+                        &amp;adv.UserId,
+                        &amp;adv.CreatedAt,
+                        &amp;adv.UpdatedAt,
+                        &amp;adv.Category,
+                        &amp;adv.RegNumber,
+                        &amp;adv.Type,
+                        &amp;adv.Color,
+                        &amp;adv.Hp,
+                        &amp;adv.FullWeight,
+                        &amp;adv.SoloWeight,
+                        &amp;adv.IsFavorite,
+                        &amp;count,
+                        &amp;adv.IsTokenMinted,
+                        &amp;adv.Promotion.Status,
+                        &amp;adv.Promotion.ExpiresAt,
+                        &amp;adv.Promotion.TariffId,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, 0, fmt.Errorf("AdRepository - List - rows.Scan: %w", err)
+                }</span>
+                <span class="cov0" title="0">ads = append(ads, adv)</span>
+        }
+
+        <span class="cov0" title="0">return ads, count, nil</span>
+}
+
+func (r *AdRepository) Delete(ctx context.Context, id int64) error <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Delete(AdTableName).
+                Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - Delete - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if _, err = r.Pool.Exec(ctx, sql, args...); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - Delete - r.Pool.Exec: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (r *AdRepository) HandleFavorite(ctx context.Context, adId, userId int64) error <span class="cov0" title="0">{
+        isFavorite, err := r.isFavorite(ctx, adId, userId)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">fmt.Println("is fav: ", isFavorite)
+
+        if isFavorite </span><span class="cov0" title="0">{
+                sql, args, err := r.Builder.
+                        Delete("user_favorites").
+                        Where(squirrel.Eq{"user_id": userId, "ad_id": adId}).
+                        ToSql()
+                if err != nil </span><span class="cov0" title="0">{
+                        return fmt.Errorf("AdRepository - HandleFavorite - r.Builder: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">_, err = r.Pool.Exec(ctx, sql, args...)
+                if err != nil </span><span class="cov0" title="0">{
+                        return fmt.Errorf("AdRepository - HandleFavorite - r.Pool.Exec: %w", err)
+                }</span>
+
+                <span class="cov0" title="0">return nil</span>
+        }
+
+        <span class="cov0" title="0">sql, args, err := r.Builder.
+                Insert("user_favorites").
+                Columns("user_id", "ad_id").
+                Values(userId, adId).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - HandleFavorite - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">_, err = r.Pool.Exec(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("AdRepository - HandleFavorite - r.Pool.Exec: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (r *AdRepository) isFavorite(ctx context.Context, adId, userId int64) (bool, error) <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Select("*").
+                From("user_favorites").
+                Where(squirrel.Eq{"user_id": userId, "ad_id": adId}).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return false, fmt.Errorf("AdRepository - isFavorite - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">rows, err := r.Pool.Query(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return false, fmt.Errorf("AdRepository - isFavorite - r.Pool.Query: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">rowsProcessed := 0
+        for rows.Next() </span><span class="cov0" title="0">{
+                rowsProcessed++
+        }</span>
+
+        <span class="cov0" title="0">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+                fmt.Printf("AdRepository - isFavorite - rows.Err: %v", err)
+                return false, err
+        }</span>
+
+        <span class="cov0" title="0">if rowsProcessed == 0 </span><span class="cov0" title="0">{
+                fmt.Println("AdRepository - isFavorite - rows == 0")
+                return false, nil
+        }</span>
+
+        <span class="cov0" title="0">fmt.Println("AdRepository - isFavorite - rows &gt; 0")
+        return true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package chat
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/chat"
+        "car-sell-buy-system/pkg/postgres"
+        "car-sell-buy-system/pkg/sqlutil"
+        "context"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+)
+
+const (
+        messageTableName = "messages"
+        chatTableName    = "chats"
+)
+
+type Repository struct {
+        *postgres.Postgres
+}
+
+func NewRepository(pg *postgres.Postgres) *Repository <span class="cov0" title="0">{
+        return &amp;Repository{
+                pg,
+        }
+}</span>
+
+func (r *Repository) StoreMessage(ctx context.Context, chatId int64, dto chat.StoreMessageDTO) (chat.Message, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+
+        sql, args, err := r.Builder.
+                Insert(messageTableName).
+                Columns(
+                        "chat_id",
+                        "sender_id",
+                        "text",
+                        "is_read",
+                ).
+                Values(
+                        chatId,
+                        userId,
+                        dto.Text,
+                        false,
+                ).
+                Suffix("RETURNING id").
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return chat.Message{}, fmt.Errorf("chat - Repository - StoreMessage - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println("sql: ", sql)
+        fmt.Println("args: ", args)
+
+        msg := chat.Message{
+                ChatId:   chatId,
+                SenderId: userId.(int64),
+                Text:     dto.Text,
+                IsRead:   false,
+                Mine:     true,
+        }
+        err = r.Pool.
+                QueryRow(ctx, sql, args...).
+                Scan(&amp;msg.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return chat.Message{}, fmt.Errorf("chat - Repository - StoreMessage - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return msg, nil</span>
+}
+
+func (r *Repository) StoreChat(ctx context.Context, dto chat.StoreChatDTO) (chat.Chat, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+        if userId == nil </span><span class="cov0" title="0">{
+                return chat.Chat{}, fmt.Errorf("user is not loggined")
+        }</span>
+
+        <span class="cov0" title="0">sql, args, err := r.Builder.
+                Insert(chatTableName).
+                Columns(
+                        "buyer_id",
+                        "seller_id",
+                        "ad_id",
+                ).
+                Values(
+                        userId,
+                        dto.SellerId,
+                        dto.AdId,
+                ).
+                Suffix("RETURNING id").
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return chat.Chat{}, fmt.Errorf("chat - Repository - StoreChat - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">cht := chat.Chat{
+                BuyerId:  userId.(int64),
+                SellerId: dto.SellerId,
+                AdId:     dto.AdId,
+        }
+        err = r.Pool.
+                QueryRow(ctx, sql, args...).
+                Scan(&amp;cht.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return chat.Chat{}, fmt.Errorf("chat - Repository - StoreChat - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return cht, nil</span>
+}
+
+func (r *Repository) ListChats(ctx context.Context) ([]chat.Chat, int64, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+
+        builder := r.Builder.
+                Select(
+                        sqlutil.TableColumn(chatTableName, "id"),
+                        sqlutil.TableColumn(chatTableName, "buyer_id"),
+                        sqlutil.TableColumn(chatTableName, "seller_id"),
+                        sqlutil.TableColumn(chatTableName, "ad_id"),
+                        sqlutil.TableColumn(chatTableName, "created_at"),
+                ).
+                From(chatTableName).
+                Where(squirrel.Or{
+                        squirrel.Eq{sqlutil.TableColumn(chatTableName, "buyer_id"): userId},
+                        squirrel.Eq{sqlutil.TableColumn(chatTableName, "seller_id"): userId},
+                }).
+                OrderBy("created_at DESC")
+
+        sql, args, err := builder.ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("chat - Repository - List - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println("sql: ", sql)
+        fmt.Println("args: ", args)
+
+        rows, err := r.Pool.Query(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("chat - Repository - List - r.Pool.Query: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var messages []chat.Chat
+        var count int64
+        for rows.Next() </span><span class="cov0" title="0">{
+                var msg chat.Chat
+                err = rows.Scan(
+                        &amp;msg.Id,
+                        &amp;msg.BuyerId,
+                        &amp;msg.SellerId,
+                        &amp;msg.AdId,
+                        &amp;msg.CreatedAt,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, 0, fmt.Errorf("chat - Repository - List - rows.Scan: %w", err)
+                }</span>
+                <span class="cov0" title="0">messages = append(messages, msg)
+                count++</span>
+        }
+
+        <span class="cov0" title="0">return messages, count, nil</span>
+}
+
+func (r *Repository) ListMessagesByChatId(ctx context.Context, chatId int64) ([]chat.Message, int64, error) <span class="cov0" title="0">{
+        userId := ctx.Value("userId")
+        fmt.Println("userId: ", userId)
+
+        builder := r.Builder.
+                Select(
+                        sqlutil.TableColumn(messageTableName, "id"),
+                        sqlutil.TableColumn(messageTableName, "chat_id"),
+                        sqlutil.TableColumn(messageTableName, "sender_id"),
+                        sqlutil.TableColumn(messageTableName, "text"),
+                        sqlutil.TableColumn(messageTableName, "is_read"),
+                        sqlutil.TableColumn(messageTableName, "created_at"),
+                ).
+                Column(squirrel.Alias(squirrel.Case().When(squirrel.Expr("messages.sender_id = ?", userId), "true").Else("false"), "mine")).
+                From(messageTableName).
+                Where(squirrel.Eq{"chat_id": chatId}).
+                OrderBy("created_at ASC").
+                Limit(200)
+
+        sql, args, err := builder.ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println("sql: ", sql)
+        fmt.Println("args: ", args)
+
+        rows, err := r.Pool.Query(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, 0, fmt.Errorf("AdRepository - List - r.Pool.Query: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var messages []chat.Message
+        var count int64
+        for rows.Next() </span><span class="cov0" title="0">{
+                var msg chat.Message
+                err = rows.Scan(
+                        &amp;msg.Id,
+                        &amp;msg.ChatId,
+                        &amp;msg.SenderId,
+                        &amp;msg.Text,
+                        &amp;msg.IsRead,
+                        &amp;msg.CreatedAt,
+                        &amp;msg.Mine,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, 0, fmt.Errorf("AdRepository - List - rows.Scan: %w", err)
+                }</span>
+                <span class="cov0" title="0">messages = append(messages, msg)
+                count++</span>
+        }
+
+        <span class="cov0" title="0">return messages, count, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package filter
+
+import (
+        "car-sell-buy-system/pkg/sqlutil"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+)
+
+type AdFilter struct {
+}
+
+func (f *AdFilter) GetFilterOptionByField(field string, value string) (sqlutil.FilterOption, error) <span class="cov0" title="0">{
+        var filter sqlutil.FilterOption
+        var err error
+
+        switch field </span>{
+        case "title":<span class="cov0" title="0">
+                filter, err = filterByTitle(value)</span>
+        case "description":<span class="cov0" title="0">
+                filter, err = filterByDescription(value)</span>
+        case "brand":<span class="cov0" title="0">
+                filter, err = filterByBrand(value)</span>
+        case "is_favorite":<span class="cov0" title="0">
+                filter, err = filterByFavorite(value)</span>
+        }
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return filter, nil</span>
+}
+
+func filterByTitle(value string) (sqlutil.FilterOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.Where(squirrel.Like{"ads.title": fmt.Sprintf("%%%s%%", value)})
+        }</span>, nil
+}
+
+func filterByDescription(value string) (sqlutil.FilterOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.Where(squirrel.Like{"ads.description": "%" + value + "%"})
+        }</span>, nil
+}
+
+func filterByBrand(value string) (sqlutil.FilterOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.Where(squirrel.Like{"ads.brand": fmt.Sprintf("%%%s%%", value)})
+        }</span>, nil
+}
+
+func filterByFavorite(isFavorite string) (sqlutil.FilterOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                if isFavorite == "true" </span><span class="cov0" title="0">{
+                        return builder.Where("user_favorites.ad_id IS NOT NULL")
+                }</span>
+
+                <span class="cov0" title="0">return builder</span>
+        }, nil
+}
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package payment
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/payment"
+        "car-sell-buy-system/pkg/postgres"
+        "car-sell-buy-system/pkg/sqlutil"
+        "context"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+)
+
+const (
+        tableName = "payments"
+)
+
+type Repository struct {
+        *postgres.Postgres
+}
+
+func NewRepository(pg *postgres.Postgres) *Repository <span class="cov0" title="0">{
+        return &amp;Repository{
+                pg,
+        }
+}</span>
+
+func (r *Repository) Store(ctx context.Context, pmnt payment.Payment) (payment.Payment, error) <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Insert(tableName).
+                Columns(
+                        "user_id",
+                        "ad_id",
+                        "tariff_id",
+                        "status",
+                        "transaction_id",
+                        "confirmation_link",
+                        "expires_at",
+                ).
+                Values(
+                        pmnt.UserId,
+                        pmnt.AdId,
+                        pmnt.Tariff.Id,
+                        pmnt.Status,
+                        pmnt.TransactionId,
+                        pmnt.ConfirmationLink,
+                        pmnt.ExpiresAt,
+                ).
+                //Suffix("RETURNING payment_id").
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return payment.Payment{}, fmt.Errorf("paymentRepository - Store - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println("sql: ", sql)
+        fmt.Println("args: ", args)
+
+        _, err = r.Pool.Exec(ctx, sql, args...)
+        //err = row.Scan(&amp;pmnt.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return payment.Payment{}, fmt.Errorf("paymentRepository - Store - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return pmnt, nil</span>
+}
+
+func (r *Repository) UpdateStatusByTransactionId(ctx context.Context, transactionId string, status string) error <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Update(tableName).
+                Set("status", status).
+                Where(squirrel.Eq{
+                        sqlutil.TableColumn(tableName, "transaction_id"): transactionId,
+                }).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("paymentRepository - UpdateStatusByTransactionId - r.Builder: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">_, err = r.Pool.Exec(ctx, sql, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("paymentRepository - UpdateStatusByTransactionId - row.Exec: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package sort
+
+import (
+        "car-sell-buy-system/pkg/sqlutil"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+)
+
+type AdSorter struct {
+}
+
+func (f *AdSorter) GetSorterOptionByField(field string, direction sqlutil.SortingDirection) (sqlutil.SortOption, error) <span class="cov0" title="0">{
+        var sorter sqlutil.SortOption
+        var err error
+
+        switch field </span>{
+        case "id":<span class="cov0" title="0">
+                sorter, err = sortById(direction)</span>
+        case "title":<span class="cov0" title="0">
+                sorter, err = sortByTitle(direction)</span>
+        case "price":<span class="cov0" title="0">
+                sorter, err = sortByPrice(direction)</span>
+        }
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return sorter, nil</span>
+}
+
+func sortById(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.OrderBy(fmt.Sprintf("ads.id %s", direction))
+        }</span>, nil
+}
+
+func sortByTitle(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.OrderBy(fmt.Sprintf("ads.title %s", direction))
+        }</span>, nil
+}
+
+func sortByPrice(direction sqlutil.SortingDirection) (sqlutil.SortOption, error) <span class="cov0" title="0">{
+        return func(builder squirrel.SelectBuilder) squirrel.SelectBuilder </span><span class="cov0" title="0">{
+                return builder.OrderBy(fmt.Sprintf("ads.price %s", direction))
+        }</span>, nil
+}
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">package tariff
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/tariff"
+        "car-sell-buy-system/pkg/postgres"
+        "car-sell-buy-system/pkg/sqlutil"
+        "context"
+        "fmt"
+        "github.com/Masterminds/squirrel"
+)
+
+const (
+        tableName = "tariffs"
+)
+
+type Repository struct {
+        *postgres.Postgres
+}
+
+func NewRepository(pg *postgres.Postgres) *Repository <span class="cov0" title="0">{
+        return &amp;Repository{
+                pg,
+        }
+}</span>
+
+func (r *Repository) GetById(ctx context.Context, id int64) (tariff.Tariff, error) <span class="cov0" title="0">{
+        sql, args, err := r.Builder.
+                Select(
+                        // ad
+                        sqlutil.TableColumn(tableName, "tariff_id"),
+                        sqlutil.TableColumn(tableName, "name"),
+                        sqlutil.TableColumn(tableName, "description"),
+                        sqlutil.TableColumn(tableName, "price"),
+                        sqlutil.TableColumn(tableName, "currency"),
+                        sqlutil.TableColumn(tableName, "duration_min"),
+                        sqlutil.TableColumn(tableName, "is_active"),
+                        sqlutil.TableColumn(tableName, "created_at"),
+                        sqlutil.TableColumn(tableName, "updated_at"),
+                ).
+                From(tableName).
+                Where(squirrel.Eq{sqlutil.TableColumn(tableName, "tariff_id"): id}).
+                ToSql()
+        if err != nil </span><span class="cov0" title="0">{
+                return tariff.Tariff{}, fmt.Errorf("TariffRepository - GetById - r.Builder: %w", err)
+        }</span>
+        <span class="cov0" title="0">fmt.Println(sql, args, id)
+
+        var t tariff.Tariff
+        err = r.Pool.
+                QueryRow(ctx, sql, args...).
+                Scan(
+                        &amp;t.Id,
+                        &amp;t.Name,
+                        &amp;t.Description,
+                        &amp;t.Price,
+                        &amp;t.Currency,
+                        &amp;t.DurationMin,
+                        &amp;t.IsActive,
+                        &amp;t.CreatedAt,
+                        &amp;t.UpdatedAt,
+                )
+        if err != nil </span><span class="cov0" title="0">{
+                return tariff.Tariff{}, fmt.Errorf("TariffRepository - GetById - row.Scan: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return t, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package webapi
+
+import (
+        "car-sell-buy-system/internal/ads-service/domain/nft"
+        "car-sell-buy-system/pkg/blockchain/conctracts/carhistory"
+        "context"
+        "crypto/ecdsa"
+        "encoding/json"
+        "fmt"
+        "github.com/ethereum/go-ethereum/accounts/abi/bind"
+        "github.com/ethereum/go-ethereum/common"
+        "github.com/ethereum/go-ethereum/crypto"
+        "github.com/ethereum/go-ethereum/ethclient"
+        "io/ioutil"
+        "math/big"
+        "net/http"
+)
+
+const (
+        rpcURL         = "https://eth-holesky.g.alchemy.com/v2/CxNXbn3cvcvBDrDOS3lNqK07mHlpeV7Y"
+        contractAddr   = "0x631884DC264999f02E0CFf7D36Cd12Dbd7aEae8f"
+        privateKeyAddr = "672c7a28eea558990b26fc49ffe7aeda99a7d5f13d2e5056ce288afac8eb00ff"
+        chainId        = 17000
+        chainName      = "Ethereum holešky"
+        chainBasicUrl  = "https://holesky.etherscan.io"
+        toAddress      = "0x36b46587441b0CC2De26343233F5DC5539F5D3D9"
+)
+
+type NftEthereumWebAPI struct {
+}
+
+func NewNftEthereumWebAPI() *NftEthereumWebAPI <span class="cov0" title="0">{
+        return &amp;NftEthereumWebAPI{}
+}</span>
+
+func (*NftEthereumWebAPI) MintNFT(ctx context.Context, tokenId *big.Int, metadataURI string) error <span class="cov0" title="0">{
+        // 1. Подключение к Ethereum-сети
+        client, err := ethclient.Dial(rpcURL)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка подключения к Ethereum: %v", err)
+        }</span>
+
+        // 2. Создание экземпляра контракта
+        <span class="cov0" title="0">contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка создания экземпляра контракта: %v", err)
+        }</span>
+
+        // 3. Настройка приватного ключа для подписания транзакций
+        <span class="cov0" title="0">privateKey, err := crypto.HexToECDSA(privateKeyAddr)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка загрузки приватного ключа: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">publicKey := privateKey.Public()
+        publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+        if !ok </span><span class="cov0" title="0">{
+                return fmt.Errorf("некорректный тип публичного ключа")
+        }</span>
+
+        <span class="cov0" title="0">fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+        // 4. Получение nonce для отправителя
+        nonce, err := client.PendingNonceAt(ctx, fromAddress)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка получения nonce: %v", err)
+        }</span>
+
+        // 5. Получение текущей цены газа
+        <span class="cov0" title="0">gasPrice, err := client.SuggestGasPrice(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка получения цены газа: %v", err)
+        }</span>
+
+        // 6. Создание авторизатора для транзакции
+        <span class="cov0" title="0">auth := bind.NewKeyedTransactor(privateKey)
+        auth.Nonce = big.NewInt(int64(nonce))
+        auth.Value = big.NewInt(0)
+        auth.GasLimit = uint64(3000000)
+        auth.GasPrice = gasPrice
+
+        // 7. Вызов функции mintCar
+        tx, err := contract.MintCar(auth, common.HexToAddress(toAddress), tokenId, metadataURI)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("ошибка выпуска токена: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">fmt.Printf("Транзакция отправлена! Хэш транзакции: %s\n", tx.Hash().Hex())
+        return nil</span>
+}
+
+func (*NftEthereumWebAPI) GetNftInfo(ctx context.Context, tokenId *big.Int) (nft.NFT, error) <span class="cov0" title="0">{
+        client, err := ethclient.Dial(rpcURL)
+        if err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка подключения к Ethereum: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">contract, err := carhistory.NewCarhistory(common.HexToAddress(contractAddr), client)
+        if err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка создания экземпляра контракта: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">uri, err := contract.TokenURI(nil, tokenId)
+        if err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка получения URI токена: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">resp, err := http.Get(uri)
+        if err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка загрузки метаданных: %v", err)
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        body, err := ioutil.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка чтения метаданных: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">var metadata nft.TokenMetadata
+        if err := json.Unmarshal(body, &amp;metadata); err != nil </span><span class="cov0" title="0">{
+                return nft.NFT{}, fmt.Errorf("ошибка разбора метаданных: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nft.NFT{
+                ContractAddr:  contractAddr,
+                ChainId:       chainId,
+                ChainName:     chainName,
+                TokenMetadata: metadata,
+                TokenId:       int(tokenId.Int64()),
+                TokenUrl:      fmt.Sprintf("%s/nft/%s/%s", chainBasicUrl, contractAddr, tokenId),
+        }, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package yookassa
+
+import (
+        "bytes"
+        "car-sell-buy-system/internal/ads-service/domain/payment"
+        "car-sell-buy-system/pkg/logger"
+        "context"
+        "encoding/json"
+        "fmt"
+        "github.com/google/uuid"
+        "io"
+        "net/http"
+        "net/url"
+        "strconv"
+        "time"
+)
+
+type Repository struct {
+        logger logger.Interface
+        //config config.Config
+}
+
+func NewRepository(logger logger.Interface) *Repository <span class="cov0" title="0">{
+        return &amp;Repository{
+                logger: logger,
+        }
+}</span>
+
+func (r *Repository) CreatePayment(ctx context.Context, pmnt payment.Payment) (payment.Payment, error) <span class="cov0" title="0">{
+        request := CreatePaymentRequest{
+                Amount: AmountResponse{
+                        Value:    strconv.FormatFloat(pmnt.Tariff.Price, 'f', -1, 64),
+                        Currency: pmnt.Tariff.Currency,
+                },
+                PaymentMethodData: PaymentMethodDataRequest{
+                        Type: "bank_card",
+                },
+                Confirmation: ConfirmationResponse{
+                        Type: "redirect",
+                        ReturnUrl: fmt.Sprintf(
+                                "http://localhost:3000/ads/%d?success=%s",
+                                pmnt.AdId,
+                                url.QueryEscape(fmt.Sprintf("Объявление c ID %d было успешно продвинуто", pmnt.AdId)),
+                        ),
+                },
+                Description: pmnt.Tariff.Description,
+        }
+
+        jsonBody, err := json.Marshal(request)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - createPayment - json.Marshal: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to make request payment: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">req, err := http.NewRequest(
+                "POST",
+                "https://api.yookassa.ru/v3/payments",
+                bytes.NewBuffer(jsonBody),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - createPayment - http.NewRequest: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to create payment: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">req.Header.Add("Content-Type", `application/json`)
+        req.Header.Add("Idempotence-Key", uuid.New().String())
+        req.SetBasicAuth("1070206", "test_FSVL5LucilxLPlZd1siu7o5Bu8flLlJlCiKv8E2wR1A")
+
+        client := &amp;http.Client{}
+        resp, err := client.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - createPayment - client.Post: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to create payment: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        body, err := io.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - createPayment - io.ReadAll: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to read response create payment: %w", err)
+        }</span>
+        <span class="cov0" title="0">r.logger.Info(fmt.Sprintf("Получены данные из Yookassa при регистрации платежа: %s", body))
+
+        p := PaymentResponse{}
+        if err = json.Unmarshal(body, &amp;p); err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - createPayment - json.Unmarshal: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to serialize response payment: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">pmnt.TransactionId = p.Id
+        pmnt.ExpiresAt = p.CreatedAt.Add(time.Duration(pmnt.Tariff.DurationMin) * time.Minute)
+        pmnt.Status = p.Status
+        pmnt.ConfirmationLink = p.Confirmation.ConfirmationUrl
+
+        return pmnt, nil</span>
+}
+
+func (r *Repository) ConfirmPayment(ctx context.Context, transactionId string) (payment.Payment, error) <span class="cov0" title="0">{
+        req, err := http.NewRequest(
+                "POST",
+                fmt.Sprintf("https://api.yookassa.ru/v3/payments/%s/capture", transactionId),
+                nil,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - ConfirmPayment - http.NewRequest: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to create payment: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">req.Header.Add("Content-Type", `application/json`)
+        req.Header.Add("Idempotence-Key", uuid.New().String())
+        req.SetBasicAuth("1070206", "test_FSVL5LucilxLPlZd1siu7o5Bu8flLlJlCiKv8E2wR1A")
+
+        client := &amp;http.Client{}
+        resp, err := client.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - ConfirmPayment - client.Post: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to create payment: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        body, err := io.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - ConfirmPayment - io.ReadAll: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to read response create payment: %w", err)
+        }</span>
+        <span class="cov0" title="0">r.logger.Info(fmt.Sprintf("Получены данные из Yookassa при подтверждении платежа: %s", body))
+
+        p := PaymentResponse{}
+        if err = json.Unmarshal(body, &amp;p); err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("Repository - yookassa - ConfirmPayment - json.Unmarshal: %s", err)
+                return payment.Payment{}, fmt.Errorf("failed to serialize response payment: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">pmnt := payment.Payment{
+                TransactionId:    p.Id,
+                Status:           p.Status,
+                ConfirmationLink: p.Confirmation.ConfirmationUrl,
+                ExpiresAt:        p.ExpiresAt,
+        }
+
+        return pmnt, nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

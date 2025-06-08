@@ -4,6 +4,7 @@ import (
 	"car-sell-buy-system/internal/sso-service/entity"
 	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
+	"car-sell-buy-system/pkg/sqlutil"
 	"context"
 	"errors"
 	"fmt"
@@ -83,12 +84,12 @@ func (r *UserRepo) GetById(ctx context.Context, id int64) (*entity.User, error) 
 		Where(squirrel.Eq{"users.id": id}).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - r.Builder: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByTransactionId - r.Builder: %w", err)
 	}
 
 	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - r.Pool.Query: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByTransactionId - r.Pool.Query: %w", err)
 	}
 
 	user, err := pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[entity.User])
@@ -96,8 +97,62 @@ func (r *UserRepo) GetById(ctx context.Context, id int64) (*entity.User, error) 
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("UserRepo - GetById - pgx.CollectOneRow: %w", err)
+		return nil, fmt.Errorf("UserRepo - GetByTransactionId - pgx.CollectOneRow: %w", err)
 	}
 
 	return user, nil
+}
+
+func (r *UserRepo) List(ctx context.Context) ([]*entity.User, error) {
+	sql, args, err := r.Builder.
+		Select("*").
+		From("users").
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - List - r.Builder: %w", err)
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - List - r.Pool.Query: %w", err)
+	}
+
+	users, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[entity.User])
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("UserRepo - List - pgx.CollectOneRow: %w", err)
+	}
+
+	return users, nil
+}
+
+func (r *UserRepo) HandleActive(ctx context.Context, userId int64) error {
+	user, err := r.GetById(ctx, userId)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("is active: ", user.IsActive)
+
+	if user.Role == "admin" {
+		return fmt.Errorf("Нельзя заблокировать админа")
+	}
+
+	sql, args, err := r.Builder.
+		Update("users").
+		Set("is_active", user.IsActive == false).
+		Where(squirrel.Eq{sqlutil.TableColumn("users", "id"): userId}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("UserRepo - Update - r.Builder: %w", err)
+	}
+
+	_, err = r.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return fmt.Errorf("UserRepo - Store - row.Scan: %w", err)
+	}
+
+	return nil
 }

@@ -34,6 +34,7 @@ func RequiredAuthMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("email", claims.Email)
+		c.Set("userId", claims.ID)
 		c.Next()
 	}
 }

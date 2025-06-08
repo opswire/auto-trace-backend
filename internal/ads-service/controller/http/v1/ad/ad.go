@@ -2,11 +2,11 @@ package ad
 
 import (
 	"car-sell-buy-system/internal/ads-service/domain/ad"
-	"car-sell-buy-system/internal/ads-service/domain/nft"
 	"car-sell-buy-system/internal/ads-service/middleware"
 	"car-sell-buy-system/pkg/handler"
 	"car-sell-buy-system/pkg/logger"
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -18,7 +18,6 @@ type Service interface {
 	Update(ctx context.Context, id int64, dto ad.UpdateDTO) error
 	Delete(ctx context.Context, id int64) error
 	HandleFavorite(ctx context.Context, adId, userId int64) error
-	GetTokenInfo(ctx context.Context, tokenId int64) (nft.NFT, error)
 }
 
 type Controller struct {
@@ -39,12 +38,11 @@ func (ctrl *Controller) InitAPI(router *gin.RouterGroup) {
 		h.Use(middleware.OptionalAuthMiddleware(ctrl.handler.Logger))
 		h.GET("", ctrl.list)
 		h.GET("/:adId", ctrl.getById)
-		h.POST("", ctrl.store)
-		h.GET("/:adId/nftInfo", ctrl.getNftInfo)
 
 		// Protected
 		h.Use(middleware.RequiredAuthMiddleware(ctrl.handler.Logger))
 		h.POST("/favorite", ctrl.handleFavorite)
+		h.POST("", ctrl.store)
 		h.PATCH("/:adId", ctrl.update)
 		h.DELETE("/:adId", ctrl.delete)
 	}
@@ -100,11 +98,13 @@ func (ctrl *Controller) getById(c *gin.Context) {
 //	@Failure		500		{object}	handler.ErrorResponse
 //	@Router			/api/v1/ads [post]
 func (ctrl *Controller) store(c *gin.Context) {
+	fmt.Println(c.Request)
 	var request StoreRequest
 	if err := c.ShouldBind(&request); err != nil {
-		ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad store error. Invalid request body.")
+		ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Не заполнены все необходимые поля: "+err.Error())
 		return
 	}
+	fmt.Println(request)
 
 	dto, err := request.ToDTO()
 	if err != nil {
@@ -112,8 +112,11 @@ func (ctrl *Controller) store(c *gin.Context) {
 		return
 	}
 
+	userId, _ := c.Get("userId")
+	ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
 	adv, err := ctrl.service.Store(
-		c.Request.Context(),
+		ctx,
 		dto,
 	)
 	if err != nil {
@@ -298,38 +301,5 @@ func (ctrl *Controller) handleFavorite(c *gin.Context) {
 	c.JSON(http.StatusOK, handler.BasicResponseDTO{
 		Status: http.StatusOK,
 		Data:   gin.H{"chat": "success"},
-	})
-}
-
-// Get NFT Info
-//
-//	@Summary		Get NFT metadata
-//	@Description	Get NFT information for ad
-//	@Tags			NFT
-//	@Accept			json
-//	@Produce		json
-//	@Param			adId	path		int	true	"Ad ID"
-//	@Success		200		{object}	handler.BasicResponseDTO{data=nft.NFT}
-//	@Failure		400		{object}	handler.ErrorResponse
-//	@Failure		404		{object}	handler.ErrorResponse
-//	@Router			/api/v1/ads/{adId}/nft [get]
-func (ctrl *Controller) getNftInfo(c *gin.Context) {
-	_, err := ctrl.handler.ParseIDFromPath(c, "adId")
-	if err != nil {
-		ctrl.handler.ErrorResponse(c, http.StatusBadRequest, err, "Ad getNftInfo error. Invalid request body.")
-
-		return
-	}
-
-	adv, err := ctrl.service.GetTokenInfo(c.Request.Context(), 5552)
-	if err != nil {
-		ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad getNftInfo error. Internal error.")
-
-		return
-	}
-
-	c.JSON(http.StatusOK, handler.BasicResponseDTO{
-		Status: http.StatusOK,
-		Data:   adv,
 	})
 }

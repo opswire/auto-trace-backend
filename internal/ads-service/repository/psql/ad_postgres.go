@@ -97,7 +97,7 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 		Where(squirrel.Eq{sqlutil.TableColumn(AdTableName, "id"): id}).
 		ToSql()
 	if err != nil {
-		return ad.Ad{}, fmt.Errorf("AdRepository - GetById - r.Builder: %w", err)
+		return ad.Ad{}, fmt.Errorf("AdRepository - GetByTransactionId - r.Builder: %w", err)
 	}
 	fmt.Println("sql: ", sql)
 	fmt.Println("args: ", args)
@@ -132,13 +132,16 @@ func (r *AdRepository) GetById(ctx context.Context, id int64) (ad.Ad, error) {
 			&adv.Promotion.TariffId,
 		)
 	if err != nil {
-		return ad.Ad{}, fmt.Errorf("AdRepository - GetById - row.Scan: %w", err)
+		return ad.Ad{}, fmt.Errorf("AdRepository - GetByTransactionId - row.Scan: %w", err)
 	}
 
 	return adv, nil
 }
 
 func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error) {
+	userId := ctx.Value("userId")
+	fmt.Println("userId: ", userId)
+
 	sql, args, err := r.Builder.
 		Insert(AdTableName).
 		Columns(
@@ -158,6 +161,7 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			"hp",
 			"full_weight",
 			"solo_weight",
+			"user_id",
 		).
 		Values(
 			dto.Title,
@@ -176,6 +180,7 @@ func (r *AdRepository) Store(ctx context.Context, dto ad.StoreDTO) (ad.Ad, error
 			dto.Hp,
 			dto.FullWeight,
 			dto.SoloWeight,
+			userId,
 		).
 		Suffix("RETURNING id").
 		ToSql()

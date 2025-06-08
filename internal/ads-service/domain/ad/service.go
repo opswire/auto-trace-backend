@@ -1,18 +1,12 @@
 package ad
 
 import (
-	"car-sell-buy-system/internal/ads-service/domain/nft"
 	"car-sell-buy-system/pkg/storage/local"
 	"context"
-	"math/big"
 )
 
 type Storage interface {
 	Save(file *local.UploadedFile) (string, error)
-}
-
-type NftRepository interface {
-	GetNftInfo(ctx context.Context, tokenId *big.Int) (nft.NFT, error)
 }
 
 type Repository interface {
@@ -25,20 +19,17 @@ type Repository interface {
 }
 
 type Service struct {
-	repository    Repository
-	nftRepository NftRepository
-	storage       Storage
+	repository Repository
+	storage    Storage
 }
 
 func NewService(
 	repository Repository,
-	nftRepository NftRepository,
 	storage Storage,
 ) *Service {
 	return &Service{
-		repository:    repository,
-		nftRepository: nftRepository,
-		storage:       storage,
+		repository: repository,
+		storage:    storage,
 	}
 }
 
@@ -109,13 +100,4 @@ func (s *Service) HandleFavorite(ctx context.Context, adId, userId int64) error 
 	}
 
 	return nil
-}
-
-func (s *Service) GetTokenInfo(ctx context.Context, tokenId int64) (nft.NFT, error) {
-	nftInfo, err := s.nftRepository.GetNftInfo(ctx, big.NewInt(tokenId))
-	if err != nil {
-		return nft.NFT{}, err
-	}
-
-	return nftInfo, nil
 }

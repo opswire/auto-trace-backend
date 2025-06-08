@@ -7,6 +7,7 @@ import (
 	"car-sell-buy-system/internal/sso-service/usecase"
 	"car-sell-buy-system/pkg/auth"
 	"car-sell-buy-system/pkg/logger"
+	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -28,6 +29,8 @@ func newAdRoutes(handler *gin.RouterGroup, l logger.Interface, uc usecase.User) 
 		// protected
 		h.Use(middleware.RequiredAuthMiddleware())
 		h.GET("/profile", r.getProfile)
+		h.GET("", r.listUsers)
+		h.PATCH("/:id/active", r.handleActive)
 	}
 }
 
@@ -109,6 +112,14 @@ func (a *userRoutes) login(c *gin.Context) {
 		return
 	}
 
+	if !user.IsActive {
+		c.JSON(http.StatusBadRequest, httpdto.BasicResponseDTO{
+			Status: http.StatusBadRequest,
+			Data:   "Пользователь не активен",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
 		Status: http.StatusOK,
 		Data: gin.H{
@@ -134,5 +145,53 @@ func (a *userRoutes) getProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
 		Status: http.StatusOK,
 		Data:   user,
+	})
+}
+
+func (a *userRoutes) listUsers(c *gin.Context) {
+	userId, _ := c.Get("userId")
+	ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+	users, err := a.uc.List(ctx)
+	if err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
+		Status: http.StatusOK,
+		Data:   users,
+	})
+}
+
+func (a *userRoutes) handleActive(c *gin.Context) {
+	userId, _ := c.Get("userId")
+	ctx := context.WithValue(c.Request.Context(), "userId", userId)
+
+	idParam := c.Param("id")
+	if idParam == "" {
+		errorResponse(c, http.StatusBadRequest, "ID must be integer")
+
+		return
+	}
+
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if id <= 0 || err != nil {
+		errorResponse(c, http.StatusBadRequest, "ID must be integer")
+
+		return
+	}
+
+	err = a.uc.HandleActive(ctx, id)
+	if err != nil {
+		errorResponse(c, http.StatusBadRequest, err.Error())
+
+		return
+	}
+
+	c.JSON(http.StatusOK, httpdto.BasicResponseDTO{
+		Status: http.StatusOK,
+		Data:   "OK",
 	})
 }

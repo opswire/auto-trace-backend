@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Masterminds/squirrel"
+	"math/rand"
 )
 
 const (
@@ -30,11 +31,13 @@ func (r *Repository) StoreNft(ctx context.Context, dto nft.StoreNftDTO) (nft.Nft
 	sql, args, err := r.Builder.
 		Insert(nftTableName).
 		Columns(
+			"token_id",
 			"vin",
 			"metadata_url",
 			"is_minted",
 		).
 		Values(
+			rand.Int(),
 			dto.Vin,
 			dto.MetadataUrl,
 			true,
@@ -78,7 +81,7 @@ func (r *Repository) GetNftByVin(ctx context.Context, vin string) (nft.Nft, erro
 		Where(squirrel.Eq{sqlutil.TableColumn(nftTableName, "vin"): vin}).
 		ToSql()
 	if err != nil {
-		return nft.Nft{}, fmt.Errorf("nft - Repository - GetById - r.Builder: %w", err)
+		return nft.Nft{}, fmt.Errorf("nft - Repository - GetByTransactionId - r.Builder: %w", err)
 	}
 	fmt.Println("sql: ", sql)
 	fmt.Println("args: ", args)
@@ -94,7 +97,7 @@ func (r *Repository) GetNftByVin(ctx context.Context, vin string) (nft.Nft, erro
 			&nftToken.CreatedAt,
 		)
 	if err != nil {
-		return nft.Nft{}, fmt.Errorf("nft - Repository - GetById - row.Scan: %w", err)
+		return nft.Nft{}, fmt.Errorf("nft - Repository - GetByTransactionId - row.Scan: %w", err)
 	}
 
 	return nftToken, nil

@@ -2,11 +2,15 @@ package main
 
 import (
 	"car-sell-buy-system/config"
+	"car-sell-buy-system/internal/payments-service/domain/payment"
+	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/segmentio/kafka-go"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -74,6 +78,38 @@ var migrateDown = &cobra.Command{
 	},
 }
 
+var testMessage = &cobra.Command{
+	Use:   "test-message",
+	Short: "test-message kafka",
+	Long:  `test-message kafka`,
+	//Args:  cobra.ExactArgs(2),
+	Run: func(cmd *cobra.Command, args []string) {
+		publisher := &kafka.Writer{
+			Addr:     kafka.TCP("localhost:9092"),
+			Topic:    "payments",
+			Balancer: &kafka.LeastBytes{},
+		}
+
+		event := payment.ConfirmedEvent{
+			PaymentID: "11",
+			UserEmail: "11",
+			Amount:    1,
+		}
+
+		data, _ := json.Marshal(event)
+		err := publisher.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(event.PaymentID),
+			Value: data,
+		})
+		if err != nil {
+			fmt.Println("Kafka error: " + err.Error())
+			return
+		}
+
+		fmt.Println(fmt.Sprintf("Событие в кафку %s было успешно отправлено", event.PaymentID))
+	},
+}
+
 var test = &cobra.Command{
 	Use:   "test",
 	Short: "test",
@@ -90,6 +126,7 @@ func init() {
 	rootCmd.AddCommand(migrateUp)
 	rootCmd.AddCommand(migrateDown)
 	rootCmd.AddCommand(test)
+	rootCmd.AddCommand(testMessage)
 }
 
 func Execute() {

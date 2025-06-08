@@ -61,7 +61,7 @@ func (ctrl *Controller) InitAPI(router *gin.RouterGroup) {
 //		return
 //	}
 //
-//	adv, err := ctrl.service.GetById(c.Request.Context(), adId)
+//	adv, err := ctrl.service.GetByTransactionId(c.Request.Context(), adId)
 //	if err != nil {
 //		ctrl.handler.ErrorResponse(c, http.StatusNotFound, err, "Ad not found. Internal error.")
 //

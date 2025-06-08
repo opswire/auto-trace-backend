@@ -6,7 +6,6 @@ import (
 	v1 "car-sell-buy-system/internal/ads-service/controller/http/v1"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/chat"
-	"car-sell-buy-system/internal/ads-service/controller/http/v1/payment"
 	"car-sell-buy-system/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
@@ -31,7 +30,6 @@ func NewRouter(
 	logger logger.Interface,
 	config *config.Config,
 	adService ad.Service,
-	paymentService payment.Service,
 	chatService chat.Service,
 ) {
 	// Options.
@@ -56,7 +54,6 @@ func NewRouter(
 	{
 		v1.NewController(
 			adService,
-			paymentService,
 			chatService,
 			logger,
 			config,
