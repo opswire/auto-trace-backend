@@ -4,9 +4,7 @@ import (
 	"car-sell-buy-system/config"
 	"car-sell-buy-system/internal/ads-service/controller/http"
 	"car-sell-buy-system/internal/ads-service/domain/ad"
-	"car-sell-buy-system/internal/ads-service/domain/chat"
 	"car-sell-buy-system/internal/ads-service/repository/psql"
-	chatpsql "car-sell-buy-system/internal/ads-service/repository/psql/chat"
 	"car-sell-buy-system/pkg/httpserver"
 	"car-sell-buy-system/pkg/logger"
 	"car-sell-buy-system/pkg/postgres"
@@ -30,15 +28,13 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Pool.Close()
 
-	// Services
 	adService := ad.NewService(
 		psql.NewAdRepository(pg, l),
 		local.NewFileStorage("./storage"),
 	)
-	chatService := chat.NewService(chatpsql.NewRepository(pg), local.NewFileStorage("./storage"))
 
 	handler := gin.New()
-	http.NewRouter(handler, l, cfg, adService, chatService)
+	http.NewRouter(handler, l, cfg, adService)
 	httpServ := httpserver.New(handler, httpserver.WithPort(cfg.Http.Port))
 
 	interrupt := make(chan os.Signal, 1)

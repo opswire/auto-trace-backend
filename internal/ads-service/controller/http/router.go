@@ -5,7 +5,6 @@ import (
 	_ "car-sell-buy-system/docs" // Swagger docs.
 	v1 "car-sell-buy-system/internal/ads-service/controller/http/v1"
 	"car-sell-buy-system/internal/ads-service/controller/http/v1/ad"
-	"car-sell-buy-system/internal/ads-service/controller/http/v1/chat"
 	"car-sell-buy-system/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
@@ -30,7 +29,6 @@ func NewRouter(
 	logger logger.Interface,
 	config *config.Config,
 	adService ad.Service,
-	chatService chat.Service,
 ) {
 	// Options.
 	handler.Use(gin.Logger())
@@ -54,7 +52,6 @@ func NewRouter(
 	{
 		v1.NewController(
 			adService,
-			chatService,
 			logger,
 			config,
 		).InitAPI(h)
