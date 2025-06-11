@@ -67,24 +67,37 @@ definitions:
     type: object
   ad.UpdateRequest:
     type: object
+  appointment.ListResponse:
+    properties:
+      appointments:
+        items:
+          $ref: '#/definitions/appointment.Response'
+        type: array
+    type: object
   appointment.Response:
     properties:
       ad_id:
         type: integer
+      ad_title:
+        type: string
       buyer_id:
         type: integer
+      buyer_name:
+        type: string
       duration:
         type: integer
       id:
         type: integer
-      is_confirmed:
+      is_canceled:
         type: boolean
-      is_success:
+      is_confirmed:
         type: boolean
       location:
         type: string
       seller_id:
         type: integer
+      seller_name:
+        type: string
       start:
         type: string
     type: object
@@ -98,23 +111,35 @@ definitions:
         type: integer
       location:
         type: string
-      seller_id:
-        type: integer
       start:
         type: string
+    required:
+    - ad_id
+    - buyer_id
+    - duration
+    - location
+    - start
     type: object
   chat.ChatResponse:
     properties:
       ad_id:
         type: integer
+      ad_title:
+        type: string
       buyer_id:
         type: integer
+      buyer_name:
+        type: string
       created_at:
         type: string
       id:
         type: integer
+      is_buyer:
+        type: boolean
       seller_id:
         type: integer
+      seller_name:
+        type: string
     type: object
   chat.ListChatResponse:
     properties:
@@ -138,6 +163,8 @@ definitions:
         type: string
       id:
         type: integer
+      image_url:
+        type: string
       is_read:
         type: boolean
       mine:
@@ -155,11 +182,6 @@ definitions:
         type: integer
     type: object
   chat.StoreMessageRequest:
-    properties:
-      chat_id:
-        type: integer
-      text:
-        type: string
     type: object
   handler.BasicResponseDTO:
     properties:
@@ -183,39 +205,6 @@ definitions:
         type: string
       tariff_id:
         type: integer
-    type: object
-  internal_ads-service_domain_nft.TokenMetadata:
-    properties:
-      attributes:
-        items:
-          properties:
-            trait_type:
-              type: string
-            value:
-              type: string
-          type: object
-        type: array
-      description:
-        type: string
-      image:
-        type: string
-      name:
-        type: string
-    type: object
-  nft.NFT:
-    properties:
-      chain_id:
-        type: integer
-      chain_name:
-        type: string
-      contract_addr:
-        type: string
-      token_id:
-        type: integer
-      token_metadata:
-        $ref: '#/definitions/internal_ads-service_domain_nft.TokenMetadata'
-      token_url:
-        type: string
     type: object
   nft.Record:
     properties:
@@ -425,40 +414,6 @@ paths:
       summary: Create new advertisement
       tags:
       - Ads
-  /api/v1/ads/{adId}/nft:
-    get:
-      consumes:
-      - application/json
-      description: Get NFT information for ad
-      parameters:
-      - description: Ad ID
-        in: path
-        name: adId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/handler.BasicResponseDTO'
-            - properties:
-                data:
-                  $ref: '#/definitions/nft.NFT'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handler.ErrorResponse'
-      summary: Get NFT metadata
-      tags:
-      - NFT
   /api/v1/ads/{id}:
     delete:
       consumes:
@@ -561,6 +516,33 @@ paths:
       tags:
       - Ads
   /api/v1/appointments:
+    get:
+      consumes:
+      - application/json
+      description: List Appointments by User ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/appointment.ListResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: List Appointments by User ID
+      tags:
+      - Appointments
     post:
       consumes:
       - application/json
@@ -595,6 +577,66 @@ paths:
       security:
       - BearerAuth: []
       summary: Create new appointment
+      tags:
+      - Appointments
+  /api/v1/appointments/{appId}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel appointment
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/appointment.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Cancel appointment
+      tags:
+      - Appointments
+  /api/v1/appointments/{appId}/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm appointment
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.BasicResponseDTO'
+            - properties:
+                data:
+                  $ref: '#/definitions/appointment.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Confirm appointment
       tags:
       - Appointments
   /api/v1/chats:

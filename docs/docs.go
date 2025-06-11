@@ -155,62 +155,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/ads/{adId}/nft": {
-            "get": {
-                "description": "Get NFT information for ad",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "NFT"
-                ],
-                "summary": "Get NFT metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Ad ID",
-                        "name": "adId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/handler.BasicResponseDTO"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/nft.NFT"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/ads/{id}": {
             "get": {
                 "description": "Get car advertisement details",
@@ -378,6 +322,51 @@ const docTemplate = `{
             }
         },
         "/api/v1/appointments": {
+            "get": {
+                "description": "List Appointments by User ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "List Appointments by User ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/appointment.ListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -406,6 +395,110 @@ const docTemplate = `{
                         }
                     }
                 ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/appointment.Response"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/appointments/{appId}/cancel": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Cancel appointment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Cancel appointment",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.BasicResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/appointment.Response"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/appointments/{appId}/confirm": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Confirm appointment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "Confirm appointment",
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -1068,14 +1161,31 @@ const docTemplate = `{
         "ad.UpdateRequest": {
             "type": "object"
         },
+        "appointment.ListResponse": {
+            "type": "object",
+            "properties": {
+                "appointments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/appointment.Response"
+                    }
+                }
+            }
+        },
         "appointment.Response": {
             "type": "object",
             "properties": {
                 "ad_id": {
                     "type": "integer"
                 },
+                "ad_title": {
+                    "type": "string"
+                },
                 "buyer_id": {
                     "type": "integer"
+                },
+                "buyer_name": {
+                    "type": "string"
                 },
                 "duration": {
                     "type": "integer"
@@ -1083,10 +1193,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "is_confirmed": {
+                "is_canceled": {
                     "type": "boolean"
                 },
-                "is_success": {
+                "is_confirmed": {
                     "type": "boolean"
                 },
                 "location": {
@@ -1094,6 +1204,9 @@ const docTemplate = `{
                 },
                 "seller_id": {
                     "type": "integer"
+                },
+                "seller_name": {
+                    "type": "string"
                 },
                 "start": {
                     "type": "string"
@@ -1102,6 +1215,13 @@ const docTemplate = `{
         },
         "appointment.StoreAppointmentRequest": {
             "type": "object",
+            "required": [
+                "ad_id",
+                "buyer_id",
+                "duration",
+                "location",
+                "start"
+            ],
             "properties": {
                 "ad_id": {
                     "type": "integer"
@@ -1114,9 +1234,6 @@ const docTemplate = `{
                 },
                 "location": {
                     "type": "string"
-                },
-                "seller_id": {
-                    "type": "integer"
                 },
                 "start": {
                     "type": "string"
@@ -1129,8 +1246,14 @@ const docTemplate = `{
                 "ad_id": {
                     "type": "integer"
                 },
+                "ad_title": {
+                    "type": "string"
+                },
                 "buyer_id": {
                     "type": "integer"
+                },
+                "buyer_name": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
@@ -1138,8 +1261,14 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_buyer": {
+                    "type": "boolean"
+                },
                 "seller_id": {
                     "type": "integer"
+                },
+                "seller_name": {
+                    "type": "string"
                 }
             }
         },
@@ -1177,6 +1306,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "image_url": {
+                    "type": "string"
+                },
                 "is_read": {
                     "type": "boolean"
                 },
@@ -1203,15 +1335,7 @@ const docTemplate = `{
             }
         },
         "chat.StoreMessageRequest": {
-            "type": "object",
-            "properties": {
-                "chat_id": {
-                    "type": "integer"
-                },
-                "text": {
-                    "type": "string"
-                }
-            }
+            "type": "object"
         },
         "handler.BasicResponseDTO": {
             "type": "object",
@@ -1245,57 +1369,6 @@ const docTemplate = `{
                 },
                 "tariff_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "internal_ads-service_domain_nft.TokenMetadata": {
-            "type": "object",
-            "properties": {
-                "attributes": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "trait_type": {
-                                "type": "string"
-                            },
-                            "value": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "nft.NFT": {
-            "type": "object",
-            "properties": {
-                "chain_id": {
-                    "type": "integer"
-                },
-                "chain_name": {
-                    "type": "string"
-                },
-                "contract_addr": {
-                    "type": "string"
-                },
-                "token_id": {
-                    "type": "integer"
-                },
-                "token_metadata": {
-                    "$ref": "#/definitions/internal_ads-service_domain_nft.TokenMetadata"
-                },
-                "token_url": {
-                    "type": "string"
                 }
             }
         },
